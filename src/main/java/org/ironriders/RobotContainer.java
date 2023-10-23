@@ -5,15 +5,10 @@
 
 package org.ironriders;
 
-import org.ironriders.Constants.OperatorConstants;
-import org.ironriders.commands.Autos;
-import org.ironriders.commands.ExampleCommand;
-import org.ironriders.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-
+import org.ironriders.Constants.OperatorConstants;
+import org.ironriders.commands.AutoOptions;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,42 +16,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer
-{
-    // The robot's subsystems and commands are defined here...
-    private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-    
-    // Replace with CommandPS4Controller or CommandJoystick if needed
+public class RobotContainer {
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
     
-    
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    public RobotContainer()
-    {
-        // Configure the trigger bindings
+    public RobotContainer() {
         configureBindings();
     }
-    
-    
-    /**
-     * Use this method to define your trigger->command mappings. Triggers can be created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
-     */
-    private void configureBindings()
-    {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        new Trigger(exampleSubsystem::exampleCondition)
-                .onTrue(new ExampleCommand(exampleSubsystem));
-        
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-        // cancelling on release.
-        driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
+
+    private void configureBindings() {
     }
     
     
@@ -65,9 +34,7 @@ public class RobotContainer
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand()
-    {
-        // An example command will be run in autonomous
-        return Autos.exampleAuto(exampleSubsystem);
+    public Command getAutonomousCommand() {
+        return new AutoOptions().getAuto();
     }
 }
