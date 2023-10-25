@@ -1,6 +1,10 @@
 package org.ironriders.lib;
 
 public class Utils {
+    public static double absoluteRotation(double input) {
+        return (input % 360 + 360) % 360;
+    }
+
     public static boolean isWithinTolerance(double input, double target, double tolerance) {
         return Math.abs(input - target) <= tolerance;
     }
