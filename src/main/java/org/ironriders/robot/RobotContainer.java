@@ -37,7 +37,7 @@ public class RobotContainer extends SubsystemBase {
         module.setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            module.setDirection(controlCurve(controller.getTwist()) * 180);
+                            module.setDirection(controlCurve(controller.getTwist()) * -90);
                             module.setSpeed(controlCurve(controller.getY()));
                         },
                         module

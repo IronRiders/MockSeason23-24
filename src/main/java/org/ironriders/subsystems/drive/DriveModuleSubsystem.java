@@ -44,8 +44,9 @@ public class DriveModuleSubsystem extends SubsystemBase {
     private void directionSetpointTick(double target) {
         double error = Utils.calculateRotationalError(target, getDirection());
 
+
         if (Math.abs(error) > 90) {
-            directionMotor.set(Utils.calculateRotationalError(target + 180, getDirection()));
+            directionMotor.set(Utils.calculateRotationalError(target + 180, getDirection()) * Drive.DIRECTION_KP);
             speedMotor.setInverted(true);
             return;
         }
@@ -62,7 +63,7 @@ public class DriveModuleSubsystem extends SubsystemBase {
     }
 
     /**
-     * In degrees (0 >= x < 360).
+     * In degrees with range of [0, 360).
      */
     public double getDirection() {
         return Utils.absoluteRotation(
