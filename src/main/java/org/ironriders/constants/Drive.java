@@ -4,7 +4,7 @@ public class Drive {
     public static final int NEO_CURRENT_LIMIT = 40;
     public static final double DISTANCE_KP = 0.1;
     // Direction is the rotation of the wheels on each module. Rotation is the rotation of the robot.
-    public static final double DIRECTION_KP = 0.1;
+    public static final double DIRECTION_KP = 0.01;
     public static final double ROTATION_KP = 0.1;
 
     /*

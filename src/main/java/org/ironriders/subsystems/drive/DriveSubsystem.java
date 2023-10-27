@@ -21,4 +21,8 @@ public class DriveSubsystem {
     public DriveSubsystem() {
         backRightModule.setDirection(0);
     }
+
+    public DriveCoordinatorSubsystem getCoordinator() {
+        return coordinator;
+    }
 }

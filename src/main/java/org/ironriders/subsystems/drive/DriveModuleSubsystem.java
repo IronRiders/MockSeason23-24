@@ -38,36 +38,36 @@ public class DriveModuleSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        directionTick();
+        directionSetpointTick(targetDirection);
     }
 
-    private void directionTick() {
-        double error = targetDirection - getDirection();
-        if (error > 180) {
-            error -= 360;
-        } else if (error < -180) {
-            error += 360;
-        }
+    private void directionSetpointTick(double target) {
+        double error = Utils.calculateRotationalError(target, getDirection());
 
         if (Math.abs(error) > 90) {
-            error += 180;
+            directionMotor.set(Utils.calculateRotationalError(target + 180, getDirection()));
+            speedMotor.setInverted(true);
+            return;
         }
 
         directionMotor.set(error * Drive.DIRECTION_KP);
+        speedMotor.setInverted(false);
     }
 
     /**
      * In full rotations.
      */
     public double getDistance() {
-        return distanceEncoder.getPosition() * Drive.Encoders.DISTANCE_GEARING;
+        return distanceEncoder.getPosition() / Drive.Encoders.DISTANCE_GEARING;
     }
 
     /**
      * In degrees (0 >= x < 360).
      */
     public double getDirection() {
-        return Utils.absoluteRotation(directionEncoder.getPosition() * 360);
+        return Utils.absoluteRotation(
+                directionMotor.getEncoder().getPosition() * 360 / Drive.Encoders.DIRECTION_GEARING);
+        //return directionEncoder.getPosition();
     }
 
     public void setSpeed(double power) {

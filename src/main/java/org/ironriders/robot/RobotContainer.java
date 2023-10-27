@@ -5,12 +5,16 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import org.ironriders.commands.AutoOptions;
 import org.ironriders.constants.Ports;
-import org.ironriders.subsystems.drive.DriveSubsystem;
+import org.ironriders.lib.Utils;
+import org.ironriders.subsystems.drive.DriveModuleSubsystem;
+
+import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,9 +22,10 @@ import org.ironriders.subsystems.drive.DriveSubsystem;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer {
-    private final Joystick controller =
-            new Joystick(Ports.Controllers.JOYSTICK);
+public class RobotContainer extends SubsystemBase {
+    private final CommandJoystick controller =
+            new CommandJoystick(Ports.Controllers.JOYSTICK);
+    DriveModuleSubsystem module = new DriveModuleSubsystem(2, 3, 0);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -28,8 +33,26 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        module.setSpeed(0.05);
+        module.setDefaultCommand(
+                new RunCommand(
+                        () -> {
+                            module.setDirection(controlCurve(controller.getTwist()) * 180);
+                            module.setSpeed(controlCurve(controller.getY()));
+                        },
+                        module
+                )
+        );
     }
-    
+
+    @Override
+    public void periodic() {
+        super.periodic();
+    }
+
+    private double controlCurve(double input) {
+        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND);
+    }
     
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

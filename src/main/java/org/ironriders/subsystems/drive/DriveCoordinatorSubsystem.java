@@ -3,6 +3,7 @@ package org.ironriders.subsystems.drive;
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Drive;
+import org.ironriders.lib.Utils;
 
 import java.util.Optional;
 
@@ -26,20 +27,22 @@ public class DriveCoordinatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        rotationTick();
+        rotationSetpointTick();
     }
 
-    private void rotationTick() {
+    private void rotationSetpointTick() {
         if (targetRotation.isEmpty()) { return; }
+        double power = Utils.calculateRotationalError(targetRotation.get(), gyro.getYaw()) * Drive.ROTATION_KP;
 
-        double error = targetRotation.get() - gyro.getYaw();
-        if (error > 180) {
-            error -= 360;
-        } else if (error < -180) {
-            error += 360;
-        }
+        frontRightModule.setDirection(-45);
+        frontLeftModule.setDirection(135);
+        backRightModule.setDirection(-135);
+        backLeftModule.setDirection(45);
 
-        inplaceTurn(error * Drive.ROTATION_KP);
+        frontRightModule.setSpeed(power);
+        frontLeftModule.setSpeed(power);
+        backRightModule.setSpeed(power);
+        backLeftModule.setSpeed(power);
     }
 
     public void translate(double direction, double power) {
@@ -56,20 +59,6 @@ public class DriveCoordinatorSubsystem extends SubsystemBase {
         backLeftModule.setSpeed(power);
     }
 
-    public void inplaceTurn(double power) {
-        targetRotation = Optional.empty();
-
-        frontRightModule.setDirection(-45.0);
-        frontLeftModule.setDirection(135.0);
-        backRightModule.setDirection(-135.0);
-        backLeftModule.setDirection(45.0);
-
-        frontRightModule.setSpeed(power);
-        frontLeftModule.setSpeed(power);
-        backRightModule.setSpeed(power);
-        backLeftModule.setSpeed(power);
-    }
-
     public void setRotation(double rotation) {
         targetRotation = Optional.of(rotation);
     }
@@ -78,6 +67,11 @@ public class DriveCoordinatorSubsystem extends SubsystemBase {
      * Points all wheels towards the center of the robot.
      */
     public void lockPosition() {
+        targetRotation = Optional.empty();
 
+        frontRightModule.setDirection(-135);
+        frontLeftModule.setDirection(45);
+        backRightModule.setDirection(-45);
+        backLeftModule.setDirection(135);
     }
 }
