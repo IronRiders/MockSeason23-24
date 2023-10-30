@@ -1,10 +1,11 @@
 package org.ironriders.subsystems.drive;
 
-import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Drive;
+import org.ironriders.lib.ThriftyEncoder;
 import org.ironriders.lib.Utils;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
@@ -14,11 +15,13 @@ public class DriveModuleSubsystem extends SubsystemBase {
     private final CANSparkMax speedMotor;
     private final CANSparkMax directionMotor;
     private final RelativeEncoder distanceEncoder;
-    // TODO: Calibrate encoder.
-    private final CANCoder directionEncoder;
+    private final ThriftyEncoder directionEncoder;
     private double targetDirection;
 
-    public DriveModuleSubsystem(int speedMotorPort, int directionMotorPort, int directionEncoderPort) {
+    private double speedMultiplier = 1;
+
+    public DriveModuleSubsystem(int speedMotorPort, int directionMotorPort, int directionEncoderPort,
+                                double magnetOffset) {
         speedMotor = new CANSparkMax(speedMotorPort, kBrushless);
         directionMotor = new CANSparkMax(directionMotorPort, kBrushless);
 
@@ -29,30 +32,29 @@ public class DriveModuleSubsystem extends SubsystemBase {
         directionMotor.setIdleMode(kBrake);
 
         distanceEncoder = speedMotor.getEncoder();
-        directionEncoder = new CANCoder(directionEncoderPort);
-
-        directionEncoder.setPositionToAbsolute();
+        directionEncoder = new ThriftyEncoder(directionEncoderPort, magnetOffset);
 
         targetDirection = getDirection();
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("encoder", directionEncoder.getPosition());
+
         directionSetpointTick(targetDirection);
     }
 
     private void directionSetpointTick(double target) {
-        double error = Utils.calculateRotationalError(target, getDirection());
-
+        double error = Utils.rotationalError(target, getDirection());
 
         if (Math.abs(error) > 90) {
-            directionMotor.set(Utils.calculateRotationalError(target + 180, getDirection()) * Drive.DIRECTION_KP);
-            speedMotor.setInverted(true);
+            directionMotor.set(Utils.rotationalError(target + 180, getDirection()) * Drive.DIRECTION_KP);
+            speedMultiplier *= -Utils.sign(speedMultiplier);
             return;
         }
 
         directionMotor.set(error * Drive.DIRECTION_KP);
-        speedMotor.setInverted(false);
+        speedMultiplier *= Utils.sign(speedMultiplier);
     }
 
     /**
@@ -66,13 +68,11 @@ public class DriveModuleSubsystem extends SubsystemBase {
      * In degrees with range of [0, 360).
      */
     public double getDirection() {
-        return Utils.absoluteRotation(
-                directionMotor.getEncoder().getPosition() * 360 / Drive.Encoders.DIRECTION_GEARING);
-        //return directionEncoder.getPosition();
+        return directionEncoder.getPosition();
     }
 
     public void setSpeed(double power) {
-        speedMotor.set(power);
+        speedMotor.set(power * speedMultiplier);
     }
 
     /**
@@ -80,5 +80,10 @@ public class DriveModuleSubsystem extends SubsystemBase {
      */
     public void setDirection(double direction) {
         targetDirection = direction;
+    }
+
+    public void stop() {
+        setSpeed(0);
+        setDirection(getDirection());
     }
 }

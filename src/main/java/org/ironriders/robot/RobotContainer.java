@@ -25,15 +25,15 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
 public class RobotContainer extends SubsystemBase {
     private final CommandJoystick controller =
             new CommandJoystick(Ports.Controllers.JOYSTICK);
-    DriveModuleSubsystem module = new DriveModuleSubsystem(2, 3, 0);
+    DriveModuleSubsystem module = new DriveModuleSubsystem(2, 3, 0, 0);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         configureBindings();
+
     }
 
     private void configureBindings() {
-        module.setSpeed(0.05);
         module.setDefaultCommand(
                 new RunCommand(
                         () -> {

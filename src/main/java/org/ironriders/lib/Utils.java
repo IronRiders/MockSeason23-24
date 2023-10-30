@@ -11,7 +11,7 @@ public class Utils {
      * @param current The current value.
      * @return The absolute error between the target and current values.
      */
-    public static double calculateRotationalError(double target, double current) {
+    public static double rotationalError(double target, double current) {
         double error = Utils.absoluteRotation(target) - current;
         if (error > 180) {
             error -= 360;

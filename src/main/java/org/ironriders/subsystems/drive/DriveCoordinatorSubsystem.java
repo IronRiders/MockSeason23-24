@@ -32,7 +32,7 @@ public class DriveCoordinatorSubsystem extends SubsystemBase {
 
     private void rotationSetpointTick() {
         if (targetRotation.isEmpty()) { return; }
-        double power = Utils.calculateRotationalError(targetRotation.get(), gyro.getYaw()) * Drive.ROTATION_KP;
+        double power = Utils.rotationalError(targetRotation.get(), gyro.getYaw()) * Drive.ROTATION_KP;
 
         frontRightModule.setDirection(-45);
         frontLeftModule.setDirection(135);
