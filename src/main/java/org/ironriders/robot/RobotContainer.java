@@ -5,14 +5,20 @@
 
 package org.ironriders.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import org.ironriders.commands.AutoOptions;
+import org.ironriders.constants.Drive;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
-import org.ironriders.subsystems.drive.DriveModuleSubsystem;
+import swervelib.SwerveDrive;
+import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
@@ -23,26 +29,25 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer extends SubsystemBase {
+    private SwerveDrive drive = null;
+
     private final CommandJoystick controller =
             new CommandJoystick(Ports.Controllers.JOYSTICK);
-    DriveModuleSubsystem module = new DriveModuleSubsystem(2, 3, 0, 0);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        configureBindings();
+        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
 
+        try {
+            drive = new SwerveParser(
+                    new File(Filesystem.getDeployDirectory(), Drive.SWERVE_CONFIG_LOCATION)
+            ).createSwerveDrive();
+        } catch (IOException ignored) {}
+
+        configureBindings();
     }
 
     private void configureBindings() {
-        module.setDefaultCommand(
-                new RunCommand(
-                        () -> {
-                            module.setDirection(controlCurve(controller.getTwist()) * -90);
-                            module.setSpeed(controlCurve(controller.getY()));
-                        },
-                        module
-                )
-        );
     }
 
     @Override
