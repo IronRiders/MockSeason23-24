@@ -7,7 +7,6 @@ package org.ironriders.robot;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import org.ironriders.commands.AutoOptions;
 import org.ironriders.constants.Drive;
@@ -28,7 +27,7 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer extends SubsystemBase {
+public class RobotContainer {
     private SwerveDrive drive = null;
 
     private final CommandJoystick controller =
@@ -48,11 +47,6 @@ public class RobotContainer extends SubsystemBase {
     }
 
     private void configureBindings() {
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
     }
 
     private double controlCurve(double input) {
