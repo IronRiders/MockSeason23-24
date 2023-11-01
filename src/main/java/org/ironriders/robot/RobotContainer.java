@@ -40,7 +40,8 @@ public class RobotContainer {
                                 new Translation2d(controlCurve(controller.getX()), controlCurve(controller.getY())),
                                 controlCurve(controller.getTwist()),
                                 true,
-                                false
+                                false,
+                                true
                         )
                 )
         );

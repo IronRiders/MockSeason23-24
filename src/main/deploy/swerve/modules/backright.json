@@ -16,7 +16,7 @@
   },
   "encoder": {
     "type": "thrifty",
-    "id": 1,
+    "id": 2,
     "canbus": null
   },
   "inverted": {
