@@ -5,19 +5,14 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import org.ironriders.commands.AutoOptions;
-import org.ironriders.constants.Drive;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
-import swervelib.SwerveDrive;
-import swervelib.parser.SwerveParser;
-import swervelib.telemetry.SwerveDriveTelemetry;
-
-import java.io.File;
-import java.io.IOException;
+import org.ironriders.subsystems.DriveSubsystem;
 
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
@@ -28,25 +23,27 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private SwerveDrive drive = null;
+    private final DriveSubsystem drive = new DriveSubsystem();
 
     private final CommandJoystick controller =
             new CommandJoystick(Ports.Controllers.JOYSTICK);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
-
-        try {
-            drive = new SwerveParser(
-                    new File(Filesystem.getDeployDirectory(), Drive.SWERVE_CONFIG_LOCATION)
-            ).createSwerveDrive();
-        } catch (IOException ignored) {}
-
         configureBindings();
     }
 
     private void configureBindings() {
+        drive.setDefaultCommand(
+                Commands.run(
+                        () -> drive.getSwerveDrive().drive(
+                                new Translation2d(controlCurve(controller.getX()), controlCurve(controller.getY())),
+                                controlCurve(controller.getTwist()),
+                                true,
+                                false
+                        )
+                )
+        );
     }
 
     private double controlCurve(double input) {
