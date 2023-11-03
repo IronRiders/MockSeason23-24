@@ -16,7 +16,7 @@ public class PivotSubsystem extends SubsystemBase {
 
     One must be able to:
     * Retrieve the position of the motor.
-    * Retrieve a command that set target of the motor with a valid end and timeout.
+    * Retrieve a command that sets target of the motor with a valid end and timeout.
 
     The code must be:
     * Clean and structured (using conventions I taught you).
@@ -30,7 +30,8 @@ public class PivotSubsystem extends SubsystemBase {
     * Use any form of AI.
     * Previous years repos.
 
-    All the files you need have been created for you. There also may be some helpful comments scattered around.
+    All the files you need have been created for you. Assume all port values are correct. There also may be some
+    helpful comments scattered around.
 
     I will be testing your code on our test board. You have 45 minutes.
      */
