@@ -37,6 +37,10 @@ public class PivotSubsystem extends SubsystemBase {
 
     private final CANSparkMax motor = new CANSparkMax(Ports.Pivot.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
 
+    public PivotSubsystem() {
+        motor.setSmartCurrentLimit(40);
+    }
+
     // The encoder has all the position data, get it by doing: `motor.getEncoder()`.
     // In your periodic, do `SmartDashboard.putNumber("Pivot Pos", GET POSITION METHOD)`.
     // Use the PIDController class. The calculate method returns the motor output. You can set the motor speed by doing
