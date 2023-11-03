@@ -5,16 +5,9 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import org.ironriders.commands.AutoOptions;
 import org.ironriders.constants.Ports;
-import org.ironriders.lib.Utils;
-import org.ironriders.subsystems.DriveSubsystem;
-
-import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,10 +16,7 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private final DriveSubsystem drive = new DriveSubsystem();
-
-    private final CommandJoystick controller =
-            new CommandJoystick(Ports.Controllers.JOYSTICK);
+    private final CommandJoystick joystick = new CommandJoystick(Ports.JOYSTICK);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -34,21 +24,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        drive.setDefaultCommand(
-                Commands.run(
-                        () -> drive.getSwerveDrive().drive(
-                                new Translation2d(controlCurve(controller.getX()), controlCurve(controller.getY())),
-                                controlCurve(controller.getTwist()),
-                                true,
-                                false,
-                                true
-                        )
-                )
-        );
-    }
-
-    private double controlCurve(double input) {
-        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND);
+        // joystick.button(7).onTrue(COMMAND);
     }
     
     /**
@@ -57,6 +33,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new AutoOptions().getAuto();
+        return null;
     }
 }
