@@ -7,10 +7,12 @@ import org.ironriders.constants.Ports;
 
 public class PivotSubsystem extends SubsystemBase {
     /*
-
     Pivot Subsystem Group Assigment
 
-    As a group, you will implement a fully working pivot system on a robot.
+    Team Name:
+
+    You will be split up into two groups, whichever team completes this first and meets all requirements, will receive
+    a half a bag of Jolly Ranchers. As a group, you will implement a fully working pivot system on a robot.
 
     One must be able to:
     * Retrieve the position of the motor.
@@ -21,11 +23,16 @@ public class PivotSubsystem extends SubsystemBase {
     * In the correct classes.
 
     Resources (try to use your knowledge as much as possible):
-    * All other branches of the repo.
+    * All other branches of this repo.
     * Online.
+
+    You are not allowed to:
+    * Use any form of AI.
+    * Previous years repos.
 
     All the files you need have been created for you. There also may be some helpful comments scattered around.
 
+    I will be testing your code on our test board. You have 45 minutes.
      */
 
     private final CANSparkMax motor = new CANSparkMax(Ports.Pivot.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
