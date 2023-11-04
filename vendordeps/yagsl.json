@@ -1,6 +1,7 @@
 {
   "fileName": "yagsl.json",
   "name": "YAGSL",
+  "frcYear": 2024,
   "version": "2023.0.6",
   "uuid": "1ccce5a4-acd2-4d18-bca3-4b8047188400",
   "mavenUrls": [
