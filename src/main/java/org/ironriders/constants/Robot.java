@@ -18,8 +18,10 @@ public class Robot {
      * Robot dimensions in IN (including bumpers).
      */
     public static class Dimensions {
-        public static final int LENGTH = 31;
-        public static final int WIDTH = 31;
-        public static final int HEIGHT = -1;
+        public static final double LENGTH = 31;
+        public static final double WIDTH = 31;
+        public static final double HEIGHT = -1;
+
+        public static final double DRIVEBASE_RADIUS = 0.3048;
     }
 }

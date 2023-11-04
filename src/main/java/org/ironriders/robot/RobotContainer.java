@@ -5,11 +5,13 @@
 
 package org.ironriders.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import org.ironriders.commands.AutoOptions;
+import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
@@ -58,6 +60,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new AutoOptions().getAuto();
+        return new DriveCommands(drive).pathFindTo(new Pose2d(100, 100, new Rotation2d(1)));
     }
 }

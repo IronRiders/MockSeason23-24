@@ -1,5 +1,8 @@
 package org.ironriders.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Drive;
@@ -9,6 +12,8 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 
 import java.io.File;
 import java.io.IOException;
+
+import static org.ironriders.constants.Robot.Dimensions;
 
 public class DriveSubsystem extends SubsystemBase {
     private final SwerveDrive swerveDrive;
@@ -23,6 +28,19 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
+
+        AutoBuilder.configureHolonomic(
+                swerveDrive::getPose,
+                swerveDrive::resetOdometry,
+                swerveDrive::getRobotVelocity,
+                swerveDrive::setChassisSpeeds,
+                new HolonomicPathFollowerConfig(
+                        4.5,
+                        Dimensions.DRIVEBASE_RADIUS,
+                        new ReplanningConfig()
+                ),
+                this
+        );
     }
 
     public SwerveDrive getSwerveDrive() {
