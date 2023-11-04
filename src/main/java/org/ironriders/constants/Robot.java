@@ -15,11 +15,11 @@ public class Robot {
     public static final double nominalVoltage = 11.0;
 
     /**
-     * Robot dimensions in TBD (including bumpers).
+     * Robot dimensions in IN (including bumpers).
      */
     public static class Dimensions {
-        public static final int LENGTH = 1;
-        public static final int WIDTH = 1;
-        public static final int HEIGHT = 1;
+        public static final int LENGTH = 31;
+        public static final int WIDTH = 31;
+        public static final int HEIGHT = -1;
     }
 }

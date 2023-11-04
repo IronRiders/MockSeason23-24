@@ -1,11 +1,12 @@
 package org.ironriders.commands;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import org.ironriders.lib.Utils;
-import org.ironriders.subsystems.drive.DriveSubsystem;
+import org.ironriders.subsystems.DriveSubsystem;
+import swervelib.SwerveDrive;
 
-import static org.ironriders.constants.Commands.Drive.SetRotation;
+import static org.ironriders.constants.Auto.Drive.*;
 
 public class DriveCommands {
     private final DriveSubsystem drive;
@@ -14,10 +15,21 @@ public class DriveCommands {
         this.drive = drive;
     }
 
-    public Command setRotation(double rotation) {
-        return Commands
-                .run(() -> drive.getCoordinator().setRotation(rotation), drive)
-                .until(() -> Utils.isWithinTolerance(drive.getRotation(), rotation, SetRotation.TOLERANCE))
-                .withTimeout(SetRotation.TIMEOUT);
+    public Command followTrajectory(PathPlannerTrajectory trajectory, boolean resetOdometry) {
+        SwerveDrive swerveDrive = drive.getSwerveDrive();
+
+        if (resetOdometry) {
+            swerveDrive.resetOdometry(trajectory.getInitialHolonomicPose());
+        }
+
+        return new PPSwerveControllerCommand(
+                trajectory,
+                swerveDrive::getPose,
+                xPID,
+                yPID,
+                anglePID,
+                swerveDrive::setChassisSpeeds,
+                drive
+        );
     }
 }
