@@ -30,19 +30,14 @@ public class DriveCommands {
 
     public Command followPath(Path path, boolean resetOdometry) {
         PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(path.name());
-        resetOdometry(resetOdometry);
 
-        return AutoBuilder.pathfindToPose(
-                pathPlannerPath.getStartingDifferentialPose(),
-                CONSTRAINTS
-        ).andThen(
+        if (resetOdometry) {
+            swerveDrive.resetOdometry(pathPlannerPath.getStartingDifferentialPose());
+            return AutoBuilder.followPathWithEvents(pathPlannerPath);
+        }
+
+        return pathFindTo(pathPlannerPath.getStartingDifferentialPose()).andThen(
                 AutoBuilder.followPathWithEvents(pathPlannerPath)
         );
-    }
-
-    private void resetOdometry(boolean reset) {
-        if (reset) {
-            swerveDrive.resetOdometry(new Pose2d());
-        }
     }
 }

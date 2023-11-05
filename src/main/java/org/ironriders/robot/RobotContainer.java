@@ -61,6 +61,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new DriveCommands(drive).followPath(Path.TEST);
+        return new DriveCommands(drive).followPath(Path.TEST, true);
     }
 }
