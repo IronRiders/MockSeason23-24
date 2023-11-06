@@ -7,10 +7,8 @@ package org.ironriders.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import org.ironriders.commands.AutoOptions;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Ports;
-import org.ironriders.lib.Path;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
 
