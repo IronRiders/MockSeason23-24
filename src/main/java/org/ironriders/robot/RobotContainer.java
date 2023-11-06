@@ -23,12 +23,13 @@ import static org.ironriders.lib.Path.TEST;
  */
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
-    DriveCommands driveCommands = new DriveCommands(drive);
-
     private final CommandJoystick joystick =
             new CommandJoystick(Ports.Controllers.JOYSTICK);
-    
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    DriveCommands driveCommands = new DriveCommands(drive);
+
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
     public RobotContainer() {
         configureBindings();
     }
@@ -46,7 +47,7 @@ public class RobotContainer {
     private double controlCurve(double input) {
         return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND);
     }
-    
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *

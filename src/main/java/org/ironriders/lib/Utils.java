@@ -7,7 +7,7 @@ public class Utils {
     /**
      * Calculates the absolute error between the target and current values, considering rotational values.
      *
-     * @param target The target value.
+     * @param target  The target value.
      * @param current The current value.
      * @return The absolute error between the target and current values.
      */
@@ -34,8 +34,8 @@ public class Utils {
     /**
      * Checks if the input value is within a specified tolerance of the target value.
      *
-     * @param input The input value.
-     * @param target The target value.
+     * @param input     The input value.
+     * @param target    The target value.
      * @param tolerance The allowable tolerance range.
      * @return {@code true} if the input value is within the specified tolerance of the target value, {@code false}
      * otherwise.
@@ -47,7 +47,7 @@ public class Utils {
     /**
      * Applies deadband to the input value. If the input falls within the specified deadband range, it is set to 0.
      *
-     * @param input The input value to be processed.
+     * @param input    The input value to be processed.
      * @param deadband The range around 0 within which the output is set to 0.
      * @return The processed output value after applying deadband.
      */
@@ -60,7 +60,7 @@ public class Utils {
      * The control curve modifies the input such that values within the deadband are set to 0,
      * and the remaining values are transformed using an exponent function.
      *
-     * @param input The input value to be modified by the control curve.
+     * @param input    The input value to be modified by the control curve.
      * @param exponent The exponent to which the normalized input (after deadband removal) is raised.
      * @param deadband The range around 0 within which the output is set to 0.
      * @return The modified output value after applying the control curve.
