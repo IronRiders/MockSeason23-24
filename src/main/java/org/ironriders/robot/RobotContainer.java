@@ -5,11 +5,7 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Ports;
@@ -28,7 +24,7 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
 
-    private final CommandJoystick controller =
+    private final CommandJoystick joystick =
             new CommandJoystick(Ports.Controllers.JOYSTICK);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -37,16 +33,13 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        DriveCommands driveCommands = new DriveCommands(drive);
+
         drive.setDefaultCommand(
-                Commands.run(
-                        () -> drive.getSwerveDrive().drive(
-                                new Translation2d(controlCurve(controller.getX()), controlCurve(controller.getY())),
-                                controlCurve(controller.getTwist()),
-                                true,
-                                false,
-                                true
-                        ),
-                        drive
+                driveCommands.teleopCommand(
+                        () -> controlCurve(joystick.getX()),
+                        () -> controlCurve(joystick.getY()),
+                        () -> controlCurve(joystick.getTwist())
                 )
         );
     }
@@ -61,6 +54,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new DriveCommands(drive).followPath(Path.TEST, true);
+        return new DriveCommands(drive).followPath(Path.TEST).repeatedly();
     }
 }

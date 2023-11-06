@@ -75,5 +75,24 @@
         }
       }
     }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "PathPlanner": {
+        "open": true
+      },
+      "Shuffleboard": {
+        "open": true
+      },
+      "SmartDashboard": {
+        "Field": {
+          "double[]##v_/SmartDashboard/Field/XModules": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      }
+    }
   }
 }
