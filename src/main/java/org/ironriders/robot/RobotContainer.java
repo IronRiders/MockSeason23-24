@@ -38,8 +38,8 @@ public class RobotContainer {
         drive.setDefaultCommand(
                 driveCommands.teleopCommand(
                         () -> controlCurve(joystick.getX()),
-                        () -> controlCurve(joystick.getY()),
-                        () -> controlCurve(joystick.getTwist())
+                        () -> -controlCurve(joystick.getY()),
+                        () -> -controlCurve(joystick.getTwist())
                 )
         );
     }
