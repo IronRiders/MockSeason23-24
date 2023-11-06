@@ -11,7 +11,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import org.ironriders.subsystems.DriveSubsystem;
 
 public final class AutoOptions {
-    public Command getAuto(DriveSubsystem drive) {
-        return new DriveCommands(drive).pathFindTo(new Pose2d(100, 100, new Rotation2d(1)));
+    private DriveCommands driveCommands;
+
+    public AutoOptions(DriveCommands driveCommands) {
+        this.driveCommands = driveCommands;
+    }
+
+    public Command getAuto() {
+        return driveCommands.pathFindTo(new Pose2d(2, 2, Rotation2d.fromDegrees(180)));
     }
 }

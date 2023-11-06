@@ -7,6 +7,7 @@ package org.ironriders.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import org.ironriders.commands.AutoOptions;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Path;
@@ -14,6 +15,7 @@ import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
 
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
+import static org.ironriders.lib.Path.TEST;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,6 +25,7 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  */
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
+    DriveCommands driveCommands = new DriveCommands(drive);
 
     private final CommandJoystick joystick =
             new CommandJoystick(Ports.Controllers.JOYSTICK);
@@ -33,8 +36,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        DriveCommands driveCommands = new DriveCommands(drive);
-
         drive.setDefaultCommand(
                 driveCommands.teleopCommand(
                         () -> controlCurve(joystick.getX()),
@@ -54,6 +55,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new DriveCommands(drive).followPath(Path.TEST).repeatedly();
+        return driveCommands.followPath(TEST, true).repeatedly();
     }
 }

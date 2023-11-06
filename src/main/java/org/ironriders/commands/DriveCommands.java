@@ -42,17 +42,26 @@ public class DriveCommands {
     }
 
     public Command pathFindTo(Pose2d target) {
+        return pathFindTo(target, false);
+    }
+
+    public Command pathFindTo(Pose2d target, boolean preserveEndVelocity) {
         return AutoBuilder.pathfindToPose(
                 target,
-                CONSTRAINTS
+                CONSTRAINTS,
+                preserveEndVelocity ? CONSTRAINTS.getMaxVelocityMps() : 0
         );
     }
 
     public Command followPath(Path path) {
-        return followPath(path, false);
+        return followPath(path, false, false);
     }
 
-    public Command followPath(Path path, boolean resetOdometry) {
+    public Command followPath(Path path, boolean preserveEndVelocity) {
+        return followPath(path, preserveEndVelocity, false);
+    }
+
+    public Command followPath(Path path, boolean preserveEndVelocity, boolean resetOdometry) {
         PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(path.name());
 
         if (resetOdometry) {
@@ -60,7 +69,7 @@ public class DriveCommands {
             return AutoBuilder.followPathWithEvents(pathPlannerPath);
         }
 
-        return pathFindTo(pathPlannerPath.getStartingDifferentialPose()).andThen(
+        return pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity).andThen(
                 AutoBuilder.followPathWithEvents(pathPlannerPath)
         );
     }
