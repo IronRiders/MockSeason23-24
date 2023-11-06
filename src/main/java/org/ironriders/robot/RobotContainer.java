@@ -5,13 +5,20 @@
 
 package org.ironriders.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import org.ironriders.commands.DriveCommands;
+import org.ironriders.constants.Drive;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Path;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
+import swervelib.SwerveDrive;
+import swervelib.parser.SwerveParser;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
@@ -22,19 +29,29 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private final DriveSubsystem drive = new DriveSubsystem();
+    private final DriveSubsystem drive;
+    private final DriveCommands driveCommands;
 
     private final CommandJoystick joystick =
             new CommandJoystick(Ports.Controllers.JOYSTICK);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        try {
+            SwerveDrive swerveDrive = new SwerveParser(
+                    new File(Filesystem.getDeployDirectory(), Drive.SWERVE_CONFIG_LOCATION)
+            ).createSwerveDrive();
+
+            drive = new DriveSubsystem(swerveDrive.swerveDriveConfiguration, swerveDrive.swerveController.config);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        driveCommands = new DriveCommands(drive);
+
         configureBindings();
     }
 
     private void configureBindings() {
-        DriveCommands driveCommands = new DriveCommands(drive);
-
         drive.setDefaultCommand(
                 driveCommands.teleopCommand(
                         () -> controlCurve(joystick.getX()),
@@ -54,6 +71,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new DriveCommands(drive).followPath(Path.TEST).repeatedly();
+        return driveCommands.followPath(Path.TEST).repeatedly();
     }
 }

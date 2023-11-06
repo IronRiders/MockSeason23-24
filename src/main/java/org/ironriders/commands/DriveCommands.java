@@ -19,18 +19,16 @@ import static org.ironriders.constants.Auto.Drive.CONSTRAINTS;
 
 public class DriveCommands {
     private final DriveSubsystem drive;
-    private final SwerveDrive swerveDrive;
 
     public DriveCommands(DriveSubsystem drive) {
         this.drive = drive;
-        this.swerveDrive = drive.getSwerveDrive();
     }
 
     public Command teleopCommand(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotation) {
-        SwerveControllerConfiguration config = swerveDrive.swerveController.config;
+        SwerveControllerConfiguration config = drive.swerveController.config;
 
         return Commands.run(
-                () -> drive.getSwerveDrive().drive(
+                () -> drive.drive(
                         new Translation2d(x.getAsDouble() * config.maxSpeed, y.getAsDouble() * config.maxSpeed),
                         rotation.getAsDouble() * config.maxAngularVelocity,
                         true,
@@ -56,7 +54,7 @@ public class DriveCommands {
         PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(path.name());
 
         if (resetOdometry) {
-            swerveDrive.resetOdometry(pathPlannerPath.getStartingDifferentialPose());
+            drive.resetOdometry(pathPlannerPath.getStartingDifferentialPose());
             return AutoBuilder.followPathWithEvents(pathPlannerPath);
         }
 

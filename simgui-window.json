@@ -10,8 +10,8 @@
       "style": "0",
       "userScale": "2",
       "width": "1280",
-      "xpos": "8",
-      "ypos": "53"
+      "xpos": "-1",
+      "ypos": "-1"
     }
   },
   "Window": {
@@ -53,7 +53,7 @@
     "###Timing": {
       "Collapsed": "0",
       "Pos": "5,150",
-      "Size": "135,173"
+      "Size": "135,196"
     },
     "Debug##Default": {
       "Collapsed": "0",

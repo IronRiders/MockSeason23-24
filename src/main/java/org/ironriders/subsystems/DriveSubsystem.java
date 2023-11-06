@@ -4,9 +4,11 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.ironriders.constants.Drive;
 import swervelib.SwerveDrive;
+import swervelib.parser.SwerveControllerConfiguration;
+import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 
@@ -15,25 +17,16 @@ import java.io.IOException;
 
 import static org.ironriders.constants.Robot.Dimensions;
 
-public class DriveSubsystem extends SubsystemBase {
-    private final SwerveDrive swerveDrive;
-
-    public DriveSubsystem() {
-        try {
-            swerveDrive = new SwerveParser(
-                    new File(Filesystem.getDeployDirectory(), Drive.SWERVE_CONFIG_LOCATION)
-            ).createSwerveDrive();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+public class DriveSubsystem extends SwerveDrive implements Subsystem {
+    public DriveSubsystem(SwerveDriveConfiguration config, SwerveControllerConfiguration controllerConfig) {
+        super(config, controllerConfig);
         SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
 
         AutoBuilder.configureHolonomic(
-                swerveDrive::getPose,
-                swerveDrive::resetOdometry,
-                swerveDrive::getRobotVelocity,
-                swerveDrive::setChassisSpeeds,
+                this::getPose,
+                this::resetOdometry,
+                this::getRobotVelocity,
+                this::setChassisSpeeds,
                 new HolonomicPathFollowerConfig(
                         4.5,
                         Dimensions.DRIVEBASE_RADIUS,
@@ -41,9 +34,5 @@ public class DriveSubsystem extends SubsystemBase {
                 ),
                 this
         );
-    }
-
-    public SwerveDrive getSwerveDrive() {
-        return swerveDrive;
     }
 }
