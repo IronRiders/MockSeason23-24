@@ -23,7 +23,7 @@ public class PivotCommands {
     }
     public Command setPivotTwist() {
         return Commands
-                .run(() -> pivot.setTarget(joystick.getTwist()))
+                .run(() -> pivot.setTarget(joystick.getTwist()*360))
                 .until(() -> !Utils.isWithinTolerance(pivot.getMotorPos(), joystick.getTwist(), TOLERANCE))
                 .withTimeout(TIMEOUT);
     }
