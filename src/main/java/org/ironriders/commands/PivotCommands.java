@@ -1,7 +1,12 @@
 package org.ironriders.commands;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.PivotSubsystem;
+
+import static org.ironriders.constants.Commands.Pivot.*;
+import static org.ironriders.constants.Pivot.*;
+import static org.ironriders.robot.RobotContainer.joystick;
 
 public class PivotCommands {
     private final PivotSubsystem pivot;
@@ -11,7 +16,17 @@ public class PivotCommands {
     }
 
     public Command setPivot(double target) {
-        // Utils.isWithinTolerance() may be useful.
-        return null;
+        return Commands
+                .run(() -> pivot.setTarget(target))
+                .until(() -> !Utils.isWithinTolerance(pivot.getMotorPos(), target, TOLERANCE))
+                .withTimeout(TIMEOUT);
     }
+    public Command setPivotTwist() {
+
+        return Commands
+                .run(() -> pivot.setTarget(joystick.getTwist()))
+                .until(() -> !Utils.isWithinTolerance(pivot.getMotorPos(), joystick.getTwist(), TOLERANCE))
+                .withTimeout(TIMEOUT);
+    }
+
 }

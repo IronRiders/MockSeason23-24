@@ -2,14 +2,20 @@ package org.ironriders.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.ironriders.constants.Pivot;
 import org.ironriders.constants.Ports;
+import static org.ironriders.constants.Pivot.*;
 
 public class PivotSubsystem extends SubsystemBase {
     /*
     Pivot Subsystem Group Assigment
 
-    Team Name:
+    Team Name: la programmation
 
     You will be split up into two groups, whichever team completes this first and meets all requirements, will receive
     a half a bag of Jolly Ranchers. As a group, you will implement a fully working pivot system on a robot.
@@ -38,8 +44,23 @@ public class PivotSubsystem extends SubsystemBase {
 
     private final CANSparkMax motor = new CANSparkMax(Ports.Pivot.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
 
+    private final PIDController pid = new PIDController(P,0,0);
+
     public PivotSubsystem() {
         motor.setSmartCurrentLimit(40);
+    }
+
+    @Override
+    public void periodic() {
+        motor.set(pid.calculate(getMotorPos()));
+        SmartDashboard.putNumber("Pivot Pos", getMotorPos());
+
+    }
+    public double getMotorPos() {
+        return motor.getEncoder().getPosition();
+    }
+    public void setTarget(double target) {
+        pid.setSetpoint(target);
     }
 
     // The encoder has all the position data, get it by doing: `motor.getEncoder()`.
