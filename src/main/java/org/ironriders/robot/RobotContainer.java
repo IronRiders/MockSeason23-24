@@ -30,7 +30,7 @@ public class RobotContainer {
     private void configureBindings() {
         joystick.button(11).onTrue(pivotCommands.setPivot(3));
         joystick.button(12).onTrue(pivotCommands.setPivot(-3));
-        joystick.button(0).onTrue(pivotCommands.setPivotTwist());
+        joystick.button(1).onTrue(pivotCommands.setPivotTwist());
     }
     
     /**

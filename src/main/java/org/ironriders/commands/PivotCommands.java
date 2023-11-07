@@ -6,7 +6,7 @@ import org.ironriders.subsystems.PivotSubsystem;
 
 import static org.ironriders.constants.Commands.Pivot.*;
 import static org.ironriders.constants.Pivot.*;
-import static org.ironriders.robot.RobotContainer.joystick;
+import static org.ironriders.robot.RobotContainer.*;
 
 public class PivotCommands {
     private final PivotSubsystem pivot;
@@ -22,11 +22,9 @@ public class PivotCommands {
                 .withTimeout(TIMEOUT);
     }
     public Command setPivotTwist() {
-
         return Commands
                 .run(() -> pivot.setTarget(joystick.getTwist()))
                 .until(() -> !Utils.isWithinTolerance(pivot.getMotorPos(), joystick.getTwist(), TOLERANCE))
                 .withTimeout(TIMEOUT);
     }
-
 }
