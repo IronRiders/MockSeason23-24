@@ -2,7 +2,10 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -49,6 +52,14 @@ public class DriveCommands {
                 CONSTRAINTS,
                 preserveEndVelocity ? CONSTRAINTS.getMaxVelocityMps() : 0
         );
+    }
+
+    public Command pathFindToTag(int id, Translation2d offset) {
+        return pathFindToTag(id, offset, new Rotation2d());
+    }
+
+    public Command pathFindToTag(int id, Translation2d offset, Rotation2d rotationOffset) {
+        pathFindTo()
     }
 
     public Command followPath(Path path) {
