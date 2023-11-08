@@ -3,17 +3,14 @@ package org.ironriders.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.ironriders.constants.Pivot;
 import org.ironriders.constants.Ports;
 import static org.ironriders.constants.Pivot.*;
 
 public class PivotSubsystem extends SubsystemBase {
     /*
-    Pivot Subsystem Group Assigment
+    Pivot Subsystem Group Assignment
 
     Team Name: la programmation
 
