@@ -21,8 +21,10 @@ public class RobotContainer {
     public static final CommandJoystick joystick = new CommandJoystick(Ports.JOYSTICK);
     private final PivotSubsystem pivot = new PivotSubsystem();
     private final PivotCommands pivotCommands = new PivotCommands(pivot);
-    
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+
+    /**
+     * The container for the robot. Contains subsystems, IO devices, and commands.
+     */
     public RobotContainer() {
         configureBindings();
     }
