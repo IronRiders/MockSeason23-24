@@ -7,7 +7,9 @@ package org.ironriders.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import org.ironriders.commands.PivotCommands;
 import org.ironriders.constants.Ports;
+import org.ironriders.subsystems.PivotSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,14 +19,22 @@ import org.ironriders.constants.Ports;
  */
 public class RobotContainer {
     private final CommandJoystick joystick = new CommandJoystick(Ports.JOYSTICK);
-    
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    private final PivotSubsystem pivot = new PivotSubsystem();
+    private final PivotCommands pivotCommands = new PivotCommands(pivot).registerNamedCommands();
+
+    /**
+     * The container for the robot. Contains subsystems, IO devices, and commands.
+     */
     public RobotContainer() {
         configureBindings();
+
+        pivot.setDefaultCommand(
+                pivotCommands.setPivot(joystick.getTwist())
+        );
     }
 
     private void configureBindings() {
-        // joystick.button(7).onTrue(COMMAND);
+        joystick.button(7).onTrue(pivotCommands.setPivot(2));
     }
     
     /**

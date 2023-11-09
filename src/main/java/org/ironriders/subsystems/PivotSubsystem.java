@@ -2,8 +2,11 @@ package org.ironriders.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Ports;
+
+import static org.ironriders.constants.Pivot.P;
 
 public class PivotSubsystem extends SubsystemBase {
     /*
@@ -37,9 +40,23 @@ public class PivotSubsystem extends SubsystemBase {
      */
 
     private final CANSparkMax motor = new CANSparkMax(Ports.Pivot.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final PIDController pid = new PIDController(P, 0, 0);
 
     public PivotSubsystem() {
         motor.setSmartCurrentLimit(40);
+    }
+
+    @Override
+    public void periodic() {
+        motor.set(pid.calculate(getPosition()));
+    }
+
+    public double getPosition() {
+        return motor.getEncoder().getPosition();
+    }
+
+    public void setTarget(double target) {
+        pid.setSetpoint(target);
     }
 
     // The encoder has all the position data, get it by doing: `motor.getEncoder()`.
