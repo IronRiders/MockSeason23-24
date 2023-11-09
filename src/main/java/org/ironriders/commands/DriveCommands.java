@@ -2,10 +2,9 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -14,6 +13,7 @@ import org.ironriders.subsystems.DriveSubsystem;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveControllerConfiguration;
 
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import static org.ironriders.constants.Auto.Drive.CONSTRAINTS;
@@ -54,12 +54,16 @@ public class DriveCommands {
         );
     }
 
-    public Command pathFindToTag(int id, Translation2d offset) {
-        return pathFindToTag(id, offset, new Rotation2d());
-    }
+    /**
+     * Returns an empty command if the tag does not exist.
+     */
+    public Command pathFindToTag(int id, Transform2d offset) {
+        Optional<Pose3d> optionalPose = drive.getVision().getTagLayout().getTagPose(id);
+        if (optionalPose.isEmpty()) {
+            return Commands.none();
+        }
 
-    public Command pathFindToTag(int id, Translation2d offset, Rotation2d rotationOffset) {
-        pathFindTo()
+        return pathFindTo(optionalPose.get().toPose2d().plus(offset));
     }
 
     public Command followPath(Path path) {

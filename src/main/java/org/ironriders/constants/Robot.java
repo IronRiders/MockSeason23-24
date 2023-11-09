@@ -1,5 +1,8 @@
 package org.ironriders.constants;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+
 /**
  * Robot specific constants.
  * <p>
@@ -12,7 +15,8 @@ package org.ironriders.constants;
  * IN = Inches
  */
 public class Robot {
-    public static final double nominalVoltage = 11.0;
+    public static final double NOMINAL_VOLTAGE = 11.0;
+    public static final Transform3d LIMELIGHT_POSITION = new Transform3d(0, 0, 0, new Rotation3d());
 
     /**
      * Robot dimensions in IN (including bumpers).
