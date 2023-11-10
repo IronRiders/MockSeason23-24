@@ -66,7 +66,8 @@
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Pigeon 2 [0]": "Gyro",
-      "/SmartDashboard/Pigeon 2 [10]": "Gyro"
+      "/SmartDashboard/Pigeon 2 [10]": "Gyro",
+      "/SmartDashboard/Pigeon 2 [9]": "Gyro"
     },
     "windows": {
       "/SmartDashboard/Pigeon 2 [0]": {

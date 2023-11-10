@@ -1,6 +1,7 @@
 package org.ironriders.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.lib.VisionPipeline;
 import org.photonvision.EstimatedRobotPose;
@@ -22,7 +23,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     public VisionSubsystem() {
         try {
-            tagLayout = AprilTagFieldLayout.loadFromResource("2018-powerup");
+            tagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory() + "/apriltags/2018-powerup.json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

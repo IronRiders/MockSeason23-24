@@ -5,6 +5,7 @@
 
 package org.ironriders.robot;
 
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import org.ironriders.commands.DriveCommands;
@@ -13,7 +14,6 @@ import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
 
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
-import static org.ironriders.lib.Path.TEST;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -54,6 +54,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.followPath(TEST, true).repeatedly();
+        return driveCommands.pathFindToTag(0, new Transform2d());
     }
 }
