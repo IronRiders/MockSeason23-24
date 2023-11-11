@@ -8,11 +8,13 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import static org.ironriders.constants.Robot.LIMELIGHT_POSITION;
+import static org.ironriders.constants.Vision.APRIL_TAG_FIELD_LAYOUT_LOCATION;
 import static org.ironriders.lib.VisionPipeline.APRIL_TAGS;
 import static org.photonvision.PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS;
 
@@ -20,19 +22,22 @@ public class VisionSubsystem extends SubsystemBase {
     private final PhotonCamera camera = new PhotonCamera("LIMELIGHT");
     private final PhotonPoseEstimator estimator;
     private final AprilTagFieldLayout tagLayout;
+    private boolean useVisionForEstimation = false;
 
     public VisionSubsystem() {
         try {
-            tagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory() + "/apriltags/2018-powerup.json");
+            tagLayout = new AprilTagFieldLayout(
+                    Filesystem.getDeployDirectory() + APRIL_TAG_FIELD_LAYOUT_LOCATION
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         estimator = new PhotonPoseEstimator(tagLayout, AVERAGE_BEST_TARGETS, camera, LIMELIGHT_POSITION);
 
+        setPipeline(APRIL_TAGS);
         camera.setLED(VisionLEDMode.kOff);
         camera.setDriverMode(false);
-        setPipeline(APRIL_TAGS);
     }
 
     public AprilTagFieldLayout getTagLayout() {
@@ -40,11 +45,19 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public Optional<EstimatedRobotPose> getPoseEstimate() {
-        return estimator.update();
+        if (useVisionForEstimation) {
+            setPipeline(APRIL_TAGS);
+            return estimator.update();
+        }
+        return Optional.empty();
     }
 
-    public PhotonCamera getCamera() {
-        return camera;
+    public void useVisionForPoseEstimation(boolean useVision) {
+        useVisionForEstimation = useVision;
+    }
+
+    public PhotonPipelineResult getResult() {
+        return camera.getLatestResult();
     }
 
     public VisionPipeline getPipeline() {
