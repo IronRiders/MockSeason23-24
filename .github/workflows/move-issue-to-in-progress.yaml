@@ -1,0 +1,25 @@
+name: Move Issue to In Progress
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  moveIssue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Move issue to In Progress
+        run: |
+          # Extract the branch name from the ref
+          BRANCH_NAME=$(echo "${{ github.ref }}" | awk -F'/' '{print $3}')
+          
+          # Find the issue number from the branch name (assuming your branch naming convention includes the issue number)
+          ISSUE_NUMBER=$(echo "${BRANCH_NAME}" | grep -oE '[0-9]+')
+          
+          # Move the issue to "In Progress" using GitHub CLI (make sure to install GitHub CLI before using this)
+          gh issue edit "${ISSUE_NUMBER}" --add-label "In Progress"
