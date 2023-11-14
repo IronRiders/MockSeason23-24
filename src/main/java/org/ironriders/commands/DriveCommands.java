@@ -37,9 +37,9 @@ public class DriveCommands {
                 () -> drive.getSwerveDrive().drive(
                         new Translation2d(x.getAsDouble() * config.maxSpeed, y.getAsDouble() * config.maxSpeed),
                         rotation.getAsDouble() * config.maxAngularVelocity,
-                        true,
                         false,
-                        true
+                        false,
+                        false
                 ),
                 drive
         );
