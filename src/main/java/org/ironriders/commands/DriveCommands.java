@@ -46,7 +46,8 @@ public class DriveCommands {
     }
 
     /**
-     * Generates a path to the specified destination using default settings false for velocity control which will stop the robot abruptly when it reaches the target.
+     * Generates a path to the specified destination using default settings false for velocity control which will stop
+     * the robot abruptly when it reaches the target.
      *
      * @param target The destination pose represented by a Pose2d object.
      * @return A Command object representing the generated path to the destination.
@@ -72,7 +73,8 @@ public class DriveCommands {
 
 
     /**
-     * Generates a path to a specified target identified by a vision tag. This will run only if the id is provided if the id is not provided it will return Command that does nothing and immediately closes itself.
+     * Generates a path to a specified target identified by a vision tag. This will run only if the id is provided if
+     * the id is not provided it will return Command that does nothing and immediately closes itself.
      *
      * @param id     The identifier of the vision tag.
      * @param offset The transformation to be applied to the identified target's pose.
@@ -89,7 +91,8 @@ public class DriveCommands {
         );
     }
     /**
-     * Generates a command to make the robot follow a pre-defined path with the default settings of preserveEndVelocity false and resetOdometry false.
+     * Generates a command to make the robot follow a pre-defined path with the default settings of preserveEndVelocity
+     * false and resetOdometry false.
      * The default settings include preserving the robot's end velocity and not resetting odometry.
      *
      * @param path The pre-defined path that the robot should follow.
@@ -99,7 +102,8 @@ public class DriveCommands {
         return followPath(path, false, false);
     }
     /**
-     * Generates a command to make the robot follow a pre-defined path with the option to preserve the velocity at the end and the default settings of resetOdometry as false.
+     * Generates a command to make the robot follow a pre-defined path with the option to preserve the velocity at the
+     * end and the default settings of resetOdometry as false.
      *
      * @param path              The pre-defined path that the robot should follow.
      * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
@@ -110,12 +114,14 @@ public class DriveCommands {
         return followPath(path, preserveEndVelocity, false);
     }
     /**
-     * Generates a command to make the robot follow a pre-defined path using a combination of pose planning and path following.
+     * Generates a command to make the robot follow a pre-defined path using a combination of pose planning and path
+     * following.
      *
      * @param path              The pre-defined path that the robot should follow.
      * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
      *                            If true, the robot will slow down smoothly; if false, it will stop abruptly.
-     * @param resetOdometry     A boolean flag indicating whether to reset the robot's odometry to the starting pose of the path.
+     * @param resetOdometry     A boolean flag indicating whether to reset the robot's odometry to the starting pose of
+     *                          the path.
      * @return A Command object representing the sequence of actions to follow the specified path.
      */
     public Command followPath(Path path, boolean preserveEndVelocity, boolean resetOdometry) {
