@@ -45,10 +45,23 @@ public class DriveCommands {
         );
     }
 
+    /**
+     * Generates a path to the specified destination using default settings false for velocity control which will stop the robot abruptly when it reaches the target.
+     *
+     * @param target The destination pose represented by a Pose2d object.
+     * @return A Command object representing the generated path to the destination.
+     */
     public Command pathFindTo(Pose2d target) {
         return pathFindTo(target, false);
     }
-
+    /**
+     * Generates a path to the specified destination with options for velocity control.
+     *
+     * @param target              The destination pose represented by a Pose2d object.
+     * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
+     *                            If true, the robot will slow down smoothly; if false, it will stop abruptly.
+     * @return A Command object representing the generated path to the destination.
+     */
     public Command pathFindTo(Pose2d target, boolean preserveEndVelocity) {
         return AutoBuilder.pathfindToPose(
                 target,
@@ -57,8 +70,13 @@ public class DriveCommands {
         );
     }
 
+
     /**
-     * Returns an empty command if the tag does not exist.
+     * Generates a path to a specified target identified by a vision tag. This will run only if the id is provided if the id is not provided it will return Command that does nothing and immediately closes itself.
+     *
+     * @param id     The identifier of the vision tag.
+     * @param offset The transformation to be applied to the identified target's pose.
+     * @return A Command object representing the generated path to the identified target.
      */
     public Command pathFindToTag(int id, Transform2d offset) {
         Optional<Pose3d> optionalPose = vision.getTagLayout().getTagPose(id);
@@ -70,15 +88,36 @@ public class DriveCommands {
                 pathFindTo(optionalPose.get().toPose2d().plus(offset))
         );
     }
-
+    /**
+     * Generates a command to make the robot follow a pre-defined path with the default settings of preserveEndVelocity false and resetOdometry false.
+     * The default settings include preserving the robot's end velocity and not resetting odometry.
+     *
+     * @param path The pre-defined path that the robot should follow.
+     * @return A Command object representing the sequence of actions to follow the specified path with default settings.
+     */
     public Command followPath(Path path) {
         return followPath(path, false, false);
     }
-
+    /**
+     * Generates a command to make the robot follow a pre-defined path with the option to preserve the velocity at the end and the default settings of resetOdometry as false.
+     *
+     * @param path              The pre-defined path that the robot should follow.
+     * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
+     *                            If true, the robot will slow down smoothly; if false, it will stop abruptly.
+     * @return A Command object representing the sequence of actions to follow the specified path.
+     */
     public Command followPath(Path path, boolean preserveEndVelocity) {
         return followPath(path, preserveEndVelocity, false);
     }
-
+    /**
+     * Generates a command to make the robot follow a pre-defined path using a combination of pose planning and path following.
+     *
+     * @param path              The pre-defined path that the robot should follow.
+     * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
+     *                            If true, the robot will slow down smoothly; if false, it will stop abruptly.
+     * @param resetOdometry     A boolean flag indicating whether to reset the robot's odometry to the starting pose of the path.
+     * @return A Command object representing the sequence of actions to follow the specified path.
+     */
     public Command followPath(Path path, boolean preserveEndVelocity, boolean resetOdometry) {
         PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(path.name());
 
@@ -92,6 +131,13 @@ public class DriveCommands {
         );
     }
 
+    /**
+     * A utility method that temporarily enables vision-based pose estimation, executes a specified command,
+     * and then disables vision-based pose estimation again.
+     *
+     * @param command The Command object to be executed after enabling vision-based pose estimation.
+     * @return A new Command object representing the sequence of actions including vision-based pose estimation.
+     */
     public Command useVisionForPoseEstimation(Command command) {
         return Commands
                 .runOnce(() -> vision.useVisionForPoseEstimation(true))
