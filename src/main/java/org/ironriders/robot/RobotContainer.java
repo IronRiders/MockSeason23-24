@@ -5,8 +5,9 @@
 
 package org.ironriders.robot;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Path;
@@ -23,8 +24,7 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  */
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
-    private final CommandJoystick joystick =
-            new CommandJoystick(Ports.Controllers.JOYSTICK);
+    private final CommandXboxController controller = new CommandXboxController(Ports.Controllers.CONTROLLER);
     DriveCommands driveCommands = new DriveCommands(drive);
 
     /**
@@ -36,12 +36,24 @@ public class RobotContainer {
 
     private void configureBindings() {
         drive.setDefaultCommand(
-                driveCommands.teleopCommand(
-                        () -> controlCurve(joystick.getX()),
-                        () -> -controlCurve(joystick.getY()),
-                        () -> -controlCurve(joystick.getTwist())
-                )
+                driveCommands.teleopCommand(() -> getTargetSpeeds(
+                        -controller.getLeftY(),
+                        -controller.getLeftX(),
+                        0,
+                        0
+                ))
         );
+    }
+
+    public ChassisSpeeds getTargetSpeeds(double x, double y, double hX, double hY) {
+        return new ChassisSpeeds(x, y, hX);
+//        return drive.getSwerveDrive().swerveController.getTargetSpeeds(
+//                controlCurve(x),
+//                controlCurve(y),
+//                controlCurve(hX),
+//                controlCurve(hY),
+//                drive.getSwerveDrive().getYaw().getRadians()
+//        );
     }
 
     private double controlCurve(double input) {

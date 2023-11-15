@@ -4,7 +4,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Drive;
 import swervelib.SwerveDrive;
@@ -49,7 +48,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void periodic() {
         getVision().getPoseEstimate().ifPresent(estimatedRobotPose -> swerveDrive.addVisionMeasurement(
                 estimatedRobotPose.estimatedPose.toPose2d(),
-                Timer.getFPGATimestamp(),
+                estimatedRobotPose.timestampSeconds,
                 false,
                 1
         ));

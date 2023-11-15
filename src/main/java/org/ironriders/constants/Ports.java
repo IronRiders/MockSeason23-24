@@ -5,7 +5,7 @@ public class Ports {
      * Driver station ports for the MOTORs.
      */
     public static class Controllers {
-        public static final int JOYSTICK = 0;
+        public static final int CONTROLLER = 0;
         public static final int KEYPAD = 1;
     }
 

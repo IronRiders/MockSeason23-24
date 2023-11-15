@@ -6,41 +6,43 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.lib.Path;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
 import swervelib.SwerveDrive;
-import swervelib.parser.SwerveControllerConfiguration;
 
 import java.util.Optional;
-import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import static org.ironriders.constants.Auto.Drive.CONSTRAINTS;
 
 public class DriveCommands {
     private final DriveSubsystem drive;
     private final VisionSubsystem vision;
-    private final SwerveDrive swerveDrive;
+    private final SwerveDrive swerve;
 
     public DriveCommands(DriveSubsystem drive) {
         this.drive = drive;
         this.vision = drive.getVision();
-        this.swerveDrive = drive.getSwerveDrive();
+        this.swerve = drive.getSwerveDrive();
     }
 
-    public Command teleopCommand(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotation) {
-        SwerveControllerConfiguration config = swerveDrive.swerveController.config;
-
+    public Command teleopCommand(Supplier<ChassisSpeeds> targetSpeeds) {
         return Commands.runOnce(
-                () -> drive.getSwerveDrive().drive(
-                        new Translation2d(x.getAsDouble() * config.maxSpeed, y.getAsDouble() * config.maxSpeed),
-                        rotation.getAsDouble() * config.maxAngularVelocity,
-                        false,
-                        false,
-                        false
-                ),
+                // look in to limiting the velocity to prevent tipping
+                () -> {
+                    SmartDashboard.putString("Chassis Speeds", targetSpeeds.get().toString());
+                    swerve.drive(
+                            new Translation2d(0.5, 0),
+                            0,
+                            false,
+                            false
+                    );
+                },
                 drive
         );
     }
@@ -128,7 +130,7 @@ public class DriveCommands {
         PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(path.name());
 
         if (resetOdometry) {
-            swerveDrive.resetOdometry(pathPlannerPath.getStartingDifferentialPose());
+            swerve.resetOdometry(pathPlannerPath.getStartingDifferentialPose());
             return AutoBuilder.followPathWithEvents(pathPlannerPath);
         }
 
