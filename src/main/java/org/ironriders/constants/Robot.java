@@ -2,6 +2,8 @@ package org.ironriders.constants;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
+import swervelib.math.SwerveMath;
 
 /**
  * Robot specific constants.
@@ -17,6 +19,13 @@ import edu.wpi.first.math.geometry.Transform3d;
 public class Robot {
     public static final double NOMINAL_VOLTAGE = 11.0;
     public static final Transform3d LIMELIGHT_POSITION = new Transform3d(0, 0, 0, new Rotation3d());
+
+    public static class Wheels {
+        public static double STEERING_CONVERSION_FACTOR =
+                SwerveMath.calculateDegreesPerSteeringRotation(21.4285714286, 1);
+        public static double DRIVE_CONVERSION_FACTOR =
+                SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(3.951), 6.75, 1);
+    }
 
     /**
      * Robot dimensions in IN (including bumpers).

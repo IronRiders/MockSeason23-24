@@ -13,7 +13,10 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import java.io.File;
 import java.io.IOException;
 
+import static org.ironriders.constants.Drive.MAX_SPEED;
 import static org.ironriders.constants.Robot.Dimensions;
+import static org.ironriders.constants.Robot.Wheels.DRIVE_CONVERSION_FACTOR;
+import static org.ironriders.constants.Robot.Wheels.STEERING_CONVERSION_FACTOR;
 
 public class DriveSubsystem extends SubsystemBase {
     private final VisionSubsystem vision = new VisionSubsystem();
@@ -23,7 +26,7 @@ public class DriveSubsystem extends SubsystemBase {
         try {
             swerveDrive = new SwerveParser(
                     new File(Filesystem.getDeployDirectory(), Drive.SWERVE_CONFIG_LOCATION)
-            ).createSwerveDrive();
+            ).createSwerveDrive(MAX_SPEED, STEERING_CONVERSION_FACTOR, DRIVE_CONVERSION_FACTOR);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,9 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void periodic() {
         getVision().getPoseEstimate().ifPresent(estimatedRobotPose -> swerveDrive.addVisionMeasurement(
                 estimatedRobotPose.estimatedPose.toPose2d(),
-                estimatedRobotPose.timestampSeconds,
-                false,
-                1
+                estimatedRobotPose.timestampSeconds
         ));
     }
 
