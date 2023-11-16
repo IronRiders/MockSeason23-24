@@ -17,8 +17,8 @@ import swervelib.math.SwerveMath;
  * IN = Inches
  */
 public class Robot {
-    public static final double NOMINAL_VOLTAGE = 11.0;
-    public static final Transform3d LIMELIGHT_POSITION = new Transform3d(0, 0, 0, new Rotation3d());
+    public static final double NOMINAL_VOLTAGE = 11.5;
+    public static final Transform3d LIMELIGHT_POSITION = new Transform3d(0, 15.5, 5.5, new Rotation3d());
 
     public static class Wheels {
         public static double STEERING_CONVERSION_FACTOR =
