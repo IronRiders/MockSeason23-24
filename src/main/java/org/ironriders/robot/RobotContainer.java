@@ -55,6 +55,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.pathFindTo(new Pose2d(10, 4, new Rotation2d()));
+        return driveCommands.pathFindTo(new Pose2d(5, 7, new Rotation2d()));
     }
 }
