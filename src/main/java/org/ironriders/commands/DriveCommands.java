@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.lib.AutoConfig;
 import org.ironriders.lib.Path;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
@@ -92,7 +93,6 @@ public class DriveCommands {
         );
     }
 
-
     /**
      * Generates a path to a specified target identified by a vision tag. This will run only if the id is provided if
      * the id is not provided it will return Command that does nothing and immediately closes itself.
@@ -156,6 +156,10 @@ public class DriveCommands {
         return pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity).andThen(
                 AutoBuilder.followPathWithEvents(pathPlannerPath)
         );
+    }
+
+    public Command buildAuto(AutoConfig auto) {
+        return AutoBuilder.buildAuto(auto.name());
     }
 
     /**
