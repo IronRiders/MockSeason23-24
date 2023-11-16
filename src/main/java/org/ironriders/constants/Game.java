@@ -10,7 +10,6 @@ package org.ironriders.constants;
  * Y = Yards
  * FT = Feet
  * IN = Inches
- * LB = Pounds
  */
 public class Game {
     public static class Field {

@@ -5,25 +5,26 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.lib.Path;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
+import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import static org.ironriders.constants.Auto.Drive.CONSTRAINTS;
+import static org.ironriders.constants.Drive.MAX_SPEED;
 
 public class DriveCommands {
     private final DriveSubsystem drive;
-    private final VisionSubsystem vision;
     private final SwerveDrive swerve;
+    private final VisionSubsystem vision;
 
     public DriveCommands(DriveSubsystem drive) {
         this.drive = drive;
@@ -31,18 +32,36 @@ public class DriveCommands {
         this.swerve = drive.getSwerveDrive();
     }
 
-    public Command teleopCommand(Supplier<ChassisSpeeds> targetSpeeds) {
+    public Command teleopCommand(DoubleSupplier x, DoubleSupplier y, DoubleSupplier h) {
+        return drive(
+                () -> swerve.swerveController.getTargetSpeeds(
+                        x.getAsDouble(),
+                        y.getAsDouble(),
+                        h.getAsDouble() * 2 + swerve.getYaw().getRadians(),
+                        swerve.getYaw().getRadians(),
+                        MAX_SPEED
+                )
+        );
+    }
+
+    /**
+     * Must be repeated to work.
+     */
+    public Command drive(Supplier<ChassisSpeeds> speeds) {
+        return drive(speeds, true, false);
+    }
+
+    /**
+     * Must be repeated to work.
+     */
+    public Command drive(Supplier<ChassisSpeeds> speeds, boolean fieldCentric, boolean openLoop) {
         return Commands.runOnce(
-                // look in to limiting the velocity to prevent tipping
-                () -> {
-                    SmartDashboard.putString("Chassis Speeds", targetSpeeds.get().toString());
-                    swerve.drive(
-                            new Translation2d(0.5, 0),
-                            0,
-                            false,
-                            false
-                    );
-                },
+                () -> swerve.drive(
+                        SwerveController.getTranslation2d(speeds.get()),
+                        speeds.get().omegaRadiansPerSecond,
+                        fieldCentric,
+                        openLoop
+                ),
                 drive
         );
     }

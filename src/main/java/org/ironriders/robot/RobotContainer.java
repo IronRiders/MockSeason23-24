@@ -5,13 +5,13 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Ports;
-import org.ironriders.lib.Path;
 import org.ironriders.lib.Utils;
+import org.ironriders.lib.controllers.CommandXboxSeriesController;
 import org.ironriders.subsystems.DriveSubsystem;
 
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
@@ -24,7 +24,8 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  */
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
-    private final CommandXboxController controller = new CommandXboxController(Ports.Controllers.CONTROLLER);
+    private final CommandXboxSeriesController controller =
+            new CommandXboxSeriesController(Ports.Controllers.CONTROLLER);
     DriveCommands driveCommands = new DriveCommands(drive);
 
     /**
@@ -36,24 +37,12 @@ public class RobotContainer {
 
     private void configureBindings() {
         drive.setDefaultCommand(
-                driveCommands.teleopCommand(() -> getTargetSpeeds(
-                        -controller.getLeftY(),
-                        -controller.getLeftX(),
-                        0,
-                        0
-                ))
+                driveCommands.teleopCommand(
+                        () -> -controlCurve(controller.getLeftY()),
+                        () -> -controlCurve(controller.getLeftX()),
+                        () -> -controlCurve(controller.getRightX())
+                )
         );
-    }
-
-    public ChassisSpeeds getTargetSpeeds(double x, double y, double hX, double hY) {
-        return new ChassisSpeeds(x, y, hX);
-//        return drive.getSwerveDrive().swerveController.getTargetSpeeds(
-//                controlCurve(x),
-//                controlCurve(y),
-//                controlCurve(hX),
-//                controlCurve(hY),
-//                drive.getSwerveDrive().getYaw().getRadians()
-//        );
     }
 
     private double controlCurve(double input) {
@@ -66,6 +55,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.followPath(Path.TEST);
+        return driveCommands.pathFindTo(new Pose2d(5, 7, new Rotation2d()));
     }
 }
