@@ -48,19 +48,19 @@ public class DriveCommands {
      * Must be repeated to work.
      */
     public Command drive(Supplier<ChassisSpeeds> speeds) {
-        return drive(speeds, true);
+        return drive(speeds, true, false);
     }
 
     /**
      * Must be repeated to work.
      */
-    public Command drive(Supplier<ChassisSpeeds> speeds, boolean fieldCentric) {
+    public Command drive(Supplier<ChassisSpeeds> speeds, boolean fieldCentric, boolean openLoop) {
         return Commands.runOnce(
                 () -> swerve.drive(
                         SwerveController.getTranslation2d(speeds.get()),
                         speeds.get().omegaRadiansPerSecond,
                         fieldCentric,
-                        false
+                        openLoop
                 ),
                 drive
         );
