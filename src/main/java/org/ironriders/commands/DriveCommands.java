@@ -134,6 +134,7 @@ public class DriveCommands {
     public Command followPath(Path path, boolean preserveEndVelocity) {
         return followPath(path, preserveEndVelocity, false);
     }
+
     /**
      * Generates a command to make the robot follow a pre-defined path using a combination of pose planning and path
      * following.
