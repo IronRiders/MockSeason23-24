@@ -77,6 +77,7 @@ public class DriveCommands {
     public Command pathFindTo(Pose2d target) {
         return pathFindTo(target, false);
     }
+
     /**
      * Generates a path to the specified destination with options for velocity control.
      *
@@ -111,6 +112,7 @@ public class DriveCommands {
                 pathFindTo(optionalPose.get().toPose2d().plus(offset))
         );
     }
+
     /**
      * Generates a command to make the robot follow a pre-defined path with the default settings of preserveEndVelocity
      * false and resetOdometry false.
@@ -122,6 +124,7 @@ public class DriveCommands {
     public Command followPath(Path path) {
         return followPath(path, false, false);
     }
+
     /**
      * Generates a command to make the robot follow a pre-defined path with the option to preserve the velocity at the
      * end and the default settings of resetOdometry as false.
