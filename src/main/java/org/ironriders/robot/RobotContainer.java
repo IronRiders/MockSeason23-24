@@ -5,15 +5,17 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
-import org.ironriders.lib.controllers.CommandXboxSeriesController;
 import org.ironriders.subsystems.DriveSubsystem;
 
+import static org.ironriders.constants.Robot.Dimensions;
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
 /**
@@ -24,8 +26,8 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
  */
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
-    private final CommandXboxSeriesController controller =
-            new CommandXboxSeriesController(Ports.Controllers.CONTROLLER);
+    private final CommandXboxController controller =
+            new CommandXboxController(Ports.Controllers.CONTROLLER);
     DriveCommands driveCommands = new DriveCommands(drive);
 
     /**
@@ -43,6 +45,8 @@ public class RobotContainer {
                         () -> -controlCurve(controller.getRightX())
                 )
         );
+
+        controller.button(1).onTrue(driveCommands.setGyro(new Rotation3d()));
     }
 
     private double controlCurve(double input) {
@@ -55,6 +59,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.pathFindTo(new Pose2d(5, 7, new Rotation2d()));
+        return driveCommands.pathFindToTag(1, new Transform2d(-Dimensions.DISTANCE_FROM_ORIGIN_TO_BUMPER - 0.2, 0, Rotation2d.fromDegrees(180)));
     }
 }

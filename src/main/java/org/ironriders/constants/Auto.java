@@ -6,10 +6,10 @@ import edu.wpi.first.math.util.Units;
 public class Auto {
     public static class Drive {
         public static final PathConstraints CONSTRAINTS = new PathConstraints(
-                3.0,
-                4.0,
-                Units.degreesToRadians(540),
-                Units.degreesToRadians(720)
+                2.5,
+                2,
+                Units.degreesToRadians(360),
+                Units.degreesToRadians(180)
         );
     }
 }

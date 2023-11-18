@@ -2,9 +2,7 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,6 +10,8 @@ import org.ironriders.lib.AutoConfig;
 import org.ironriders.lib.Path;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonTrackedTarget;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import static org.ironriders.constants.Auto.Drive.CONSTRAINTS;
 import static org.ironriders.constants.Drive.MAX_SPEED;
+import static org.ironriders.constants.Robot.LIMELIGHT_POSITION;
 
 public class DriveCommands {
     private final DriveSubsystem drive;
@@ -41,6 +42,43 @@ public class DriveCommands {
                         h.getAsDouble() * 2 + swerve.getYaw().getRadians(),
                         swerve.getYaw().getRadians(),
                         MAX_SPEED
+                )
+        );
+    }
+
+    public Command setGyro(Rotation3d rotation) {
+        return Commands.runOnce(() -> swerve.setGyro(rotation), drive);
+    }
+
+    public Command pathFindToCube(Transform2d offset) {
+        return pathFindToCube(offset, 0);
+    }
+
+    public Command pathFindToCube(Transform2d offset, double targetHeight) {
+        if (!vision.getResult().hasTargets()) {
+            return Commands.none();
+        }
+        PhotonTrackedTarget target = vision.getResult().getBestTarget();
+
+        return pathFindTo(
+                swerve.getPose().plus(
+                        new Transform2d(
+                                PhotonUtils.estimateCameraToTargetTranslation(
+                                        PhotonUtils.calculateDistanceToTargetMeters(
+                                                LIMELIGHT_POSITION.getZ(),
+                                                targetHeight,
+                                                0,
+                                                0
+                                        ),
+                                        Rotation2d.fromDegrees(target.getYaw())
+                                ),
+                                new Rotation2d()
+                        ).plus(
+                                new Transform2d(
+                                        LIMELIGHT_POSITION.getTranslation().toTranslation2d(),
+                                        LIMELIGHT_POSITION.getRotation().toRotation2d()
+                                )
+                        ).plus(offset)
                 )
         );
     }
@@ -157,8 +195,9 @@ public class DriveCommands {
             return AutoBuilder.followPathWithEvents(pathPlannerPath);
         }
 
-        return pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity).andThen(
-                AutoBuilder.followPathWithEvents(pathPlannerPath)
+        return useVisionForPoseEstimation(
+                pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity)
+                        .andThen(AutoBuilder.followPathWithEvents(pathPlannerPath))
         );
     }
 

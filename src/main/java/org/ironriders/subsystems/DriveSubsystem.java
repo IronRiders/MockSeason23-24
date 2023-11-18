@@ -3,6 +3,7 @@ package org.ironriders.subsystems;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Drive;
@@ -53,6 +54,10 @@ public class DriveSubsystem extends SubsystemBase {
                 estimatedRobotPose.estimatedPose.toPose2d(),
                 estimatedRobotPose.timestampSeconds
         ));
+    }
+
+    public void setGyro(Rotation3d rotation) {
+        swerveDrive.setGyro(new Rotation3d());
     }
 
     public VisionSubsystem getVision() {

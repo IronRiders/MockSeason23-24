@@ -36,5 +36,9 @@ public class Robot {
         public static final double HEIGHT = -1;
 
         public static final double DRIVEBASE_RADIUS = 0.3048;
+        /**
+         * Length in M.
+         */
+        public static final double DISTANCE_FROM_ORIGIN_TO_BUMPER = Units.inchesToMeters(LENGTH / 2.0);
     }
 }
