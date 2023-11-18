@@ -15,7 +15,6 @@ import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
 
-import static org.ironriders.constants.Robot.Dimensions;
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
 /**
@@ -59,6 +58,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.pathFindToTag(1, new Transform2d(-Dimensions.DISTANCE_FROM_ORIGIN_TO_BUMPER - 0.2, 0, Rotation2d.fromDegrees(180)));
+        return driveCommands.pathFindToTag(1, new Transform2d(1, 0, new Rotation2d()));
     }
 }

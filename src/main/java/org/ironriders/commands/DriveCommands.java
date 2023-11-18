@@ -11,7 +11,6 @@ import org.ironriders.lib.Path;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
 import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonTrackedTarget;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
@@ -55,11 +54,6 @@ public class DriveCommands {
     }
 
     public Command pathFindToCube(Transform2d offset, double targetHeight) {
-        if (!vision.getResult().hasTargets()) {
-            return Commands.none();
-        }
-        PhotonTrackedTarget target = vision.getResult().getBestTarget();
-
         return pathFindTo(
                 swerve.getPose().plus(
                         new Transform2d(
@@ -70,17 +64,12 @@ public class DriveCommands {
                                                 0,
                                                 0
                                         ),
-                                        Rotation2d.fromDegrees(target.getYaw())
+                                        Rotation2d.fromDegrees(vision.getResult().getBestTarget().getYaw())
                                 ),
                                 new Rotation2d()
-                        ).plus(
-                                new Transform2d(
-                                        LIMELIGHT_POSITION.getTranslation().toTranslation2d(),
-                                        LIMELIGHT_POSITION.getRotation().toRotation2d()
-                                )
                         ).plus(offset)
                 )
-        );
+        ).onlyIf(() -> vision.getResult().hasTargets());
     }
 
     /**
@@ -147,7 +136,7 @@ public class DriveCommands {
         }
 
         return useVisionForPoseEstimation(
-                pathFindTo(optionalPose.get().toPose2d().plus(offset))
+                pathFindTo(optionalPose.get().toPose2d().plus(offset.inverse()))
         );
     }
 
