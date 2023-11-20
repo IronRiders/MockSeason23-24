@@ -33,26 +33,84 @@ public class DriveCommands {
         this.swerve = drive.getSwerveDrive();
     }
 
-    public Command teleopCommand(DoubleSupplier x, DoubleSupplier y, DoubleSupplier h) {
+    /**
+     * Creates a teleoperated command for swerve drive using joystick inputs.
+     *
+     * @param x The x-axis joystick input.
+     * @param y The y-axis joystick input.
+     * @param a The rotation joystick input.
+     * @return a command to control the swerve drive during teleop.
+     */
+    public Command teleopCommand(DoubleSupplier x, DoubleSupplier y, DoubleSupplier a) {
         return drive(
                 () -> swerve.swerveController.getTargetSpeeds(
                         x.getAsDouble(),
                         y.getAsDouble(),
-                        h.getAsDouble() * 2 + swerve.getYaw().getRadians(),
+                        a.getAsDouble() * 2 + swerve.getYaw().getRadians(),
                         swerve.getYaw().getRadians(),
                         MAX_SPEED
                 )
         );
     }
 
+    /**
+     * Creates a command to set the gyro orientation to a specified rotation.
+     *
+     * @param rotation The desired rotation for the gyro.
+     * @return A command to set the gyro orientation.
+     */
     public Command setGyro(Rotation3d rotation) {
         return Commands.runOnce(() -> swerve.setGyro(rotation), drive);
     }
 
+    /**
+     * Creates a command to drive the swerve robot using specified speeds. Must be repeated to work.
+     *
+     * @param speeds The supplier providing the desired chassis speeds.
+     * @return A command to drive the swerve robot with the specified speeds.
+     */
+    public Command drive(Supplier<ChassisSpeeds> speeds) {
+        return drive(speeds, true, false);
+    }
+
+    /**
+     * Creates a command to drive the swerve robot using specified speeds and control options. Must be repeated to
+     * work.
+     *
+     * @param speeds       The supplier providing the desired chassis speeds.
+     * @param fieldCentric Whether the control is field-centric.
+     * @param openLoop     Whether the control is open loop.
+     * @return A command to drive the swerve robot with the specified speeds and control options.
+     */
+    public Command drive(Supplier<ChassisSpeeds> speeds, boolean fieldCentric, boolean openLoop) {
+        return Commands.runOnce(
+                () -> swerve.drive(
+                        SwerveController.getTranslation2d(speeds.get()),
+                        speeds.get().omegaRadiansPerSecond,
+                        fieldCentric,
+                        openLoop
+                ),
+                drive
+        );
+    }
+
+    /**
+     * Creates a command to navigate to a cube using a predefined path offset.
+     *
+     * @param offset The additional transformation to adjust the path.
+     * @return A command to navigate to a cube with the given offset.
+     */
     public Command pathFindToCube(Transform2d offset) {
         return pathFindToCube(offset, 0);
     }
 
+    /**
+     * Creates a command to navigate to a cube with a specified path offset and target height.
+     *
+     * @param offset       The additional transformation to adjust the path.
+     * @param targetHeight The height of the target cube.
+     * @return A command to navigate to a cube with the given offset and target height.
+     */
     public Command pathFindToCube(Transform2d offset, double targetHeight) {
         return pathFindTo(
                 swerve.getPose().plus(
@@ -73,28 +131,6 @@ public class DriveCommands {
     }
 
     /**
-     * Must be repeated to work.
-     */
-    public Command drive(Supplier<ChassisSpeeds> speeds) {
-        return drive(speeds, true, false);
-    }
-
-    /**
-     * Must be repeated to work.
-     */
-    public Command drive(Supplier<ChassisSpeeds> speeds, boolean fieldCentric, boolean openLoop) {
-        return Commands.runOnce(
-                () -> swerve.drive(
-                        SwerveController.getTranslation2d(speeds.get()),
-                        speeds.get().omegaRadiansPerSecond,
-                        fieldCentric,
-                        openLoop
-                ),
-                drive
-        );
-    }
-
-    /**
      * Generates a path to the specified destination using default settings false for velocity control which will stop
      * the robot abruptly when it reaches the target.
      *
@@ -110,7 +146,8 @@ public class DriveCommands {
      *
      * @param target              The destination pose represented by a Pose2d object.
      * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
-     *                            If true, the robot will slow down smoothly; if false, it will stop abruptly.
+     *                            If true, the path will end with the robot going the max velocity; if false, it will
+     *                            stop abruptly.
      * @return A Command object representing the generated path to the destination.
      */
     public Command pathFindTo(Pose2d target, boolean preserveEndVelocity) {
@@ -158,7 +195,8 @@ public class DriveCommands {
      *
      * @param path              The pre-defined path that the robot should follow.
      * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
-     *                            If true, the robot will slow down smoothly; if false, it will stop abruptly.
+     *                            If true, the path will end with the robot going the max velocity; if false, it will
+     *                            stop abruptly.
      * @return A Command object representing the sequence of actions to follow the specified path.
      */
     public Command followPath(Path path, boolean preserveEndVelocity) {
@@ -171,7 +209,8 @@ public class DriveCommands {
      *
      * @param path              The pre-defined path that the robot should follow.
      * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
-     *                            If true, the robot will slow down smoothly; if false, it will stop abruptly.
+     *                            If true, the path will end with the robot going the max velocity; if false, it will
+     *                            stop abruptly.
      * @param resetOdometry     A boolean flag indicating whether to reset the robot's odometry to the starting pose of
      *                          the path.
      * @return A Command object representing the sequence of actions to follow the specified path.
@@ -190,6 +229,12 @@ public class DriveCommands {
         );
     }
 
+    /**
+     * Builds an autonomous command based on the provided {@code AutoConfig}.
+     *
+     * @param auto The configuration object specifying the autonomous routine.
+     * @return A command representing the autonomous routine specified by the {@code AutoConfig}.
+     */
     public Command buildAuto(AutoConfig auto) {
         return AutoBuilder.buildAuto(auto.name());
     }
