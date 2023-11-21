@@ -1,0 +1,34 @@
+package org.ironriders.commands;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.subsystems.ManipulatorSubsystem;
+
+public class ManipulatorCommands {
+    private final ManipulatorSubsystem manipulator;
+
+    public ManipulatorCommands(ManipulatorSubsystem manipulatorSubsystem) {
+        manipulator = manipulatorSubsystem;
+    }
+
+    public ManipulatorCommands registerNamedCommands() {
+        NamedCommands.registerCommand("Grab", grab());
+        NamedCommands.registerCommand("Eject", eject());
+        NamedCommands.registerCommand("Stop Manipulator", stop());
+
+        return this;
+    }
+
+    public Command grab() {
+        return Commands.runOnce(manipulator::grab, manipulator);
+    }
+
+    public Command eject() {
+        return Commands.runOnce(manipulator::eject, manipulator);
+    }
+
+    public Command stop() {
+        return Commands.runOnce(manipulator::stop, manipulator);
+    }
+}

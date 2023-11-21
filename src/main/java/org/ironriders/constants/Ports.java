@@ -20,6 +20,11 @@ public class Ports {
         }
     }
 
+    public static class Manipulator {
+        public static final int RIGHT_MOTOR = 1; // TODO: put actual port number
+        public static final int LEFT_MOTOR = 2; // TODO: put actual port number
+    }
+
     /**
      * Ports for each swerve module on the drive base.
      * <p>
