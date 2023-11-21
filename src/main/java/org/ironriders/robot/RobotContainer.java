@@ -31,8 +31,7 @@ public class RobotContainer {
     private final CommandXboxController controller =
             new CommandXboxController(Ports.Controllers.CONTROLLER);
     DriveCommands driveCommands = new DriveCommands(drive);
-    ManipulatorCommands manipulatorCommands = new ManipulatorCommands(manipulator)
-            .registerNamedCommands();
+    ManipulatorCommands manipulatorCommands = new ManipulatorCommands(manipulator);
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.

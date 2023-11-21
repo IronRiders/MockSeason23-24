@@ -10,14 +10,14 @@ public class ManipulatorCommands {
 
     public ManipulatorCommands(ManipulatorSubsystem manipulatorSubsystem) {
         manipulator = manipulatorSubsystem;
-    }
 
-    public ManipulatorCommands registerNamedCommands() {
         NamedCommands.registerCommand("Grab", grab());
         NamedCommands.registerCommand("Eject", eject());
         NamedCommands.registerCommand("Stop Manipulator", stop());
+    }
 
-        return this;
+    public Command set(ManipulatorSubsystem.State state) {
+        return Commands.runOnce(() -> manipulator.set(state), manipulator);
     }
 
     public Command grab() {

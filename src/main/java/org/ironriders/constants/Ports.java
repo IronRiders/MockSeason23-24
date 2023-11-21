@@ -25,6 +25,7 @@ public class Ports {
         public static final int RIGHT_MOTOR = 10;
         public static final int LEFT_MOTOR = 11;
 
+        public static final int ENCODER = 0;
     }
 
     public static class Manipulator {

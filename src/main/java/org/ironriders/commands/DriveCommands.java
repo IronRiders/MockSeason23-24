@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.ironriders.lib.AutoConfig;
 import org.ironriders.lib.Path;
 import org.ironriders.lib.VisionPipeline;
 import org.ironriders.subsystems.DriveSubsystem;
@@ -241,16 +240,6 @@ public class DriveCommands {
                 pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity)
                         .andThen(AutoBuilder.followPathWithEvents(pathPlannerPath))
         );
-    }
-
-    /**
-     * Builds an autonomous command based on the provided {@code AutoConfig}.
-     *
-     * @param auto The configuration object specifying the autonomous routine.
-     * @return A command representing the autonomous routine specified by the {@code AutoConfig}.
-     */
-    public Command buildAuto(AutoConfig auto) {
-        return AutoBuilder.buildAuto(auto.name());
     }
 
     /**
