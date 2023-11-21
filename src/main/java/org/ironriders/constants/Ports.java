@@ -18,18 +18,21 @@ public class Ports {
         public static class S1 {
             public static final int RSL = 0;
         }
-    }
 
-    public static class Manipulator {
-        public static final int RIGHT_MOTOR = 1; // TODO: put actual port number
-        public static final int LEFT_MOTOR = 2; // TODO: put actual port number
     }
 
     public static class Arm {
-        public static final int RIGHT_MOTOR = 3;
-        public static final int LEFT_MOTOR = 7;
+        public static final int RIGHT_MOTOR = 10;
+        public static final int LEFT_MOTOR = 11;
 
     }
+
+    public static class Manipulator {
+        public static final int RIGHT_MOTOR = 12;
+        public static final int LEFT_MOTOR = 13;
+
+    }
+
     /**
      * Ports for each swerve module on the drive base.
      * <p>
