@@ -45,6 +45,10 @@ public class RobotContainer {
                 )
         );
 
+        drive.getVision().setDefaultCommand(
+                driveCommands.pathFindToCube(new Transform2d())
+        );
+
         controller.button(1).onTrue(driveCommands.setGyro(new Rotation3d()));
     }
 
