@@ -20,6 +20,11 @@ public class Ports {
         }
     }
 
+    public static class Arm {
+        public static final int RIGHT_MOTOR = 3;
+        public static final int LEFT_MOTOR = 7;
+
+    }
     /**
      * Ports for each swerve module on the drive base.
      * <p>
