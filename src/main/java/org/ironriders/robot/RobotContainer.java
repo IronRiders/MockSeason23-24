@@ -5,9 +5,7 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
@@ -28,8 +26,7 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
     private final ManipulatorSubsystem manipulator = new ManipulatorSubsystem();
-    private final CommandXboxController controller =
-            new CommandXboxController(Ports.Controllers.CONTROLLER);
+    private final CommandXboxController controller = new CommandXboxController(Ports.Controllers.CONTROLLER);
     DriveCommands driveCommands = new DriveCommands(drive);
     ManipulatorCommands manipulatorCommands = new ManipulatorCommands(manipulator);
 
@@ -49,10 +46,6 @@ public class RobotContainer {
                 )
         );
 
-        drive.getVision().setDefaultCommand(
-                driveCommands.pathFindToCube(new Transform2d())
-        );
-
         controller.button(1).onTrue(driveCommands.setGyro(new Rotation3d()));
     }
 
@@ -66,6 +59,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.pathFindToTag(1, new Transform2d(1, 0, new Rotation2d()));
+        return null;
     }
 }

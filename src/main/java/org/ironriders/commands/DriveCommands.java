@@ -2,16 +2,16 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.lib.Path;
-import org.ironriders.lib.VisionPipeline;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
-import org.photonvision.PhotonUtils;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 
 import static org.ironriders.constants.Auto.Drive.CONSTRAINTS;
 import static org.ironriders.constants.Drive.MAX_SPEED;
-import static org.ironriders.constants.Robot.LIMELIGHT_POSITION;
 
 public class DriveCommands {
     private final DriveSubsystem drive;
@@ -92,54 +91,6 @@ public class DriveCommands {
                         openLoop
                 ),
                 drive
-        );
-    }
-
-    /**
-     * Creates a command to navigate to a cube using a predefined path offset.
-     *
-     * @param offset The additional transformation to adjust the path.
-     * @return A command to navigate to a cube with the given offset.
-     */
-    public Command pathFindToCube(Transform2d offset) {
-        return pathFindToCube(offset, 0);
-    }
-
-    /**
-     * Creates a command to navigate to a cube with a specified path offset and target height.
-     *
-     * @param offset       The additional transformation to adjust the path.
-     * @param targetHeight The height of the target cube.
-     * @return A command to navigate to a cube with the given offset and target height.
-     */
-    public Command pathFindToCube(Transform2d offset, double targetHeight) {
-        SmartDashboard.putString(
-                "Distance",
-                String.valueOf(PhotonUtils.calculateDistanceToTargetMeters(
-                        LIMELIGHT_POSITION.getZ(),
-                        targetHeight,
-                        0,
-                        0
-                ))
-        );
-
-        return Commands.runOnce(() -> vision.setPipeline(VisionPipeline.CUBES), vision).andThen(
-                pathFindTo(
-                        swerve.getPose().plus(
-                                new Transform2d(
-                                        PhotonUtils.estimateCameraToTargetTranslation(
-                                                PhotonUtils.calculateDistanceToTargetMeters(
-                                                        LIMELIGHT_POSITION.getZ(),
-                                                        targetHeight,
-                                                        0,
-                                                        0
-                                                ),
-                                                Rotation2d.fromDegrees(vision.getResult().getBestTarget().getYaw())
-                                        ),
-                                        new Rotation2d()
-                                ).plus(offset)
-                        )
-                ).onlyIf(() -> vision.getResult().hasTargets())
         );
     }
 
