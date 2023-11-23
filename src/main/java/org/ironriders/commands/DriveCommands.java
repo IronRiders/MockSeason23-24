@@ -2,10 +2,7 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -59,8 +56,8 @@ public class DriveCommands {
      * @param rotation The desired rotation for the gyro.
      * @return A command to set the gyro orientation.
      */
-    public Command setGyro(Rotation3d rotation) {
-        return Commands.runOnce(() -> swerve.setGyro(rotation), drive);
+    public Command setGyro(Pose2d rotation) {
+        return Commands.runOnce(() -> swerve.resetOdometry(rotation), drive);
     }
 
     /**
@@ -137,7 +134,9 @@ public class DriveCommands {
         }
 
         return useVisionForPoseEstimation(
-                pathFindTo(optionalPose.get().toPose2d().plus(offset.inverse()))
+                pathFindTo(optionalPose.get().toPose2d().plus(
+                        offset.inverse().plus(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)))
+                ))
         );
     }
 

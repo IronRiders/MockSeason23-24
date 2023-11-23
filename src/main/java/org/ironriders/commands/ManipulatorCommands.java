@@ -20,15 +20,15 @@ public class ManipulatorCommands {
         return Commands.runOnce(() -> manipulator.set(state), manipulator);
     }
 
-    public Command grab() {
+    private Command grab() {
         return Commands.runOnce(manipulator::grab, manipulator);
     }
 
-    public Command eject() {
+    private Command eject() {
         return Commands.runOnce(manipulator::eject, manipulator);
     }
 
-    public Command stop() {
+    private Command stop() {
         return Commands.runOnce(manipulator::stop, manipulator);
     }
 }

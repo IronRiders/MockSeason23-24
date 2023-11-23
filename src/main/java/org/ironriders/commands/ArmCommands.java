@@ -22,9 +22,7 @@ public class ArmCommands {
     }
 
     public Command setPivot(ArmSubsystem.State preset) {
-        return Commands
-                .runOnce(() -> arm.set(preset))
-                .until(() -> Utils.isWithinTolerance(arm.getPosition(), preset.getPosition(), TOLERANCE));
+        return setPivot(preset.getPosition());
     }
 
     public Command setPivot(double target) {

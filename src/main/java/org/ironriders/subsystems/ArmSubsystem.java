@@ -71,6 +71,8 @@ public class ArmSubsystem extends SubsystemBase {
         REST(0),
         SWITCH(0),
         PORTAL(0),
+        PORTAL_RETURN(0),
+        PLAYER_STATION(0),
         FULL(0);
 
         final int position;

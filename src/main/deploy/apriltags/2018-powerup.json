@@ -1,12 +1,12 @@
 {
   "tags": [
     {
-      "ID": 1,
+      "ID": 10,
       "pose": {
         "translation": {
           "x": 2,
           "y": 2,
-          "z": 0.3
+          "z": 0.1
         },
         "rotation": {
           "quaternion": {
