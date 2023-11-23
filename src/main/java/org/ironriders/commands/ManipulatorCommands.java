@@ -3,7 +3,10 @@ package org.ironriders.commands;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.constants.Manipulator;
 import org.ironriders.subsystems.ManipulatorSubsystem;
+
+import static org.ironriders.constants.Manipulator.State.*;
 
 public class ManipulatorCommands {
     private final ManipulatorSubsystem manipulator;
@@ -16,19 +19,19 @@ public class ManipulatorCommands {
         NamedCommands.registerCommand("Stop Manipulator", stop());
     }
 
-    public Command set(ManipulatorSubsystem.State state) {
+    public Command set(Manipulator.State state) {
         return Commands.runOnce(() -> manipulator.set(state), manipulator);
     }
 
     private Command grab() {
-        return Commands.runOnce(manipulator::grab, manipulator);
+        return Commands.runOnce(() -> set(GRAB), manipulator);
     }
 
     private Command eject() {
-        return Commands.runOnce(manipulator::eject, manipulator);
+        return Commands.runOnce(() -> set(EJECT), manipulator);
     }
 
     private Command stop() {
-        return Commands.runOnce(manipulator::stop, manipulator);
+        return Commands.runOnce(() -> set(STOP), manipulator);
     }
 }

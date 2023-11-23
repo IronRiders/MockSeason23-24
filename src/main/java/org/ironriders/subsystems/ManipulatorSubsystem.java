@@ -2,6 +2,7 @@ package org.ironriders.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.ironriders.commands.ManipulatorCommands;
 import org.ironriders.constants.Ports;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
@@ -9,6 +10,7 @@ import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static org.ironriders.constants.Manipulator.*;
 
 public class ManipulatorSubsystem extends SubsystemBase {
+    private final ManipulatorCommands commands;
     private final CANSparkMax leader = new CANSparkMax(Ports.Manipulator.RIGHT_MOTOR, kBrushless);
     @SuppressWarnings("FieldCanBeLocal")
     private final CANSparkMax follower = new CANSparkMax(Ports.Manipulator.LEFT_MOTOR, kBrushless);
@@ -19,6 +21,12 @@ public class ManipulatorSubsystem extends SubsystemBase {
         follower.setIdleMode(kBrake);
 
         follower.follow(leader, true);
+
+        commands = new ManipulatorCommands(this);
+    }
+
+    public ManipulatorCommands getCommands() {
+        return commands;
     }
 
     public void set(State state) {
@@ -29,21 +37,15 @@ public class ManipulatorSubsystem extends SubsystemBase {
         }
     }
 
-    public void grab() {
+    private void grab() {
         leader.set(GRAB_SPEED);
     }
 
-    public void eject() {
+    private void eject() {
         leader.set(-EJECT_SPEED);
     }
 
-    public void stop() {
+    private void stop() {
         leader.set(0);
-    }
-
-    public enum State {
-        GRAB,
-        EJECT,
-        STOP
     }
 }

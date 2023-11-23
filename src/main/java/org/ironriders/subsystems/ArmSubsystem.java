@@ -5,6 +5,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.ironriders.commands.ArmCommands;
 import org.ironriders.constants.Ports;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
@@ -15,6 +16,7 @@ import static org.ironriders.constants.Arm.*;
 import static org.ironriders.constants.Arm.PIDFF.*;
 
 public class ArmSubsystem extends SubsystemBase {
+    private final ArmCommands commands;
     private final CANSparkMax leader = new CANSparkMax(Ports.Arm.RIGHT_MOTOR, kBrushless);
     @SuppressWarnings("FieldCanBeLocal")
     private final CANSparkMax follower = new CANSparkMax(Ports.Arm.LEFT_MOTOR, kBrushless);
@@ -45,11 +47,17 @@ public class ArmSubsystem extends SubsystemBase {
         encoder.setDistancePerRotation(360);
 
         pid.setSetpoint(getPosition());
+
+        commands = new ArmCommands(this);
     }
 
     @Override
     public void periodic() {
         leader.set(MathUtil.clamp(pid.calculate(getPosition()), -1, 1) * SPEED);
+    }
+
+    public ArmCommands getCommands() {
+        return commands;
     }
 
     public void set(State state) {
@@ -65,24 +73,5 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void set(double target) {
         pid.setSetpoint(target);
-    }
-
-    public enum State {
-        REST(0),
-        SWITCH(0),
-        PORTAL(0),
-        PORTAL_RETURN(0),
-        PLAYER_STATION(0),
-        FULL(0);
-
-        final int position;
-
-        State(int position) {
-            this.position = position;
-        }
-
-        public int getPosition() {
-            return position;
-        }
     }
 }

@@ -5,15 +5,13 @@
 
 package org.ironriders.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
-import org.ironriders.commands.ManipulatorCommands;
+import org.ironriders.commands.RobotCommands;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
+import org.ironriders.subsystems.ArmSubsystem;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
 
@@ -28,9 +26,10 @@ import static org.ironriders.constants.Teleop.Controllers.Joystick;
 public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
     private final ManipulatorSubsystem manipulator = new ManipulatorSubsystem();
+    private final ArmSubsystem arm = new ArmSubsystem();
     private final CommandXboxController controller = new CommandXboxController(Ports.Controllers.CONTROLLER);
-    DriveCommands driveCommands = new DriveCommands(drive);
-    ManipulatorCommands manipulatorCommands = new ManipulatorCommands(manipulator);
+    private final RobotCommands commands = new RobotCommands(arm, drive, manipulator);
+    private final DriveCommands driveCommands = drive.getCommands();
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
@@ -47,6 +46,8 @@ public class RobotContainer {
                         () -> -controlCurve(controller.getRightX())
                 )
         );
+
+        controller.button(1).onTrue(commands.depositToSwitch());
     }
 
     private double controlCurve(double input) {
@@ -59,6 +60,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.pathFindToTag(10, new Transform2d(new Translation2d(-1, 0), new Rotation2d()));
+        return driveCommands.pathFindToTag(10);
     }
 }

@@ -1,6 +1,29 @@
 package org.ironriders.constants;
 
+import edu.wpi.first.math.util.Units;
+
 public class Arm {
+    public static final double LENGTH_FROM_ORIGIN = Units.inchesToMeters(18);
+
+    public enum State {
+        REST(0),
+        SWITCH(0),
+        EXCHANGE(0),
+        EXCHANGE_RETURN(0),
+        PORTAL(0),
+        FULL(0);
+
+        final int position;
+
+        State(int position) {
+            this.position = position;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+    }
+
     public static final double SPEED = 0.5;
     public static final double TOLERANCE = 0.1;
     public static final double ENCODER_OFFSET = 0;

@@ -1,37 +1,68 @@
 package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import org.ironriders.constants.Arm;
+import org.ironriders.constants.Manipulator;
 import org.ironriders.lib.AutoConfig;
 import org.ironriders.subsystems.ArmSubsystem;
+import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
+import org.ironriders.subsystems.VisionSubsystem;
+
+import static org.ironriders.constants.Game.Field.AprilTagLocation;
 
 public class RobotCommands {
     private final ArmCommands arm;
     private final DriveCommands drive;
+    private final VisionSubsystem vision;
     private final ManipulatorCommands manipulator;
 
-    public RobotCommands(ArmCommands arm, DriveCommands drive, ManipulatorCommands manipulator) {
-        this.arm = arm;
-        this.drive = drive;
-        this.manipulator = manipulator;
+    public RobotCommands(ArmSubsystem arm, DriveSubsystem drive, ManipulatorSubsystem manipulator) {
+        this.arm = arm.getCommands();
+        this.drive = drive.getCommands();
+        vision = drive.getVision();
+        this.manipulator = manipulator.getCommands();
     }
 
     public Command reset() {
-        return arm.setPivot(ArmSubsystem.State.REST)
-                .alongWith(manipulator.set(ManipulatorSubsystem.State.STOP));
+        return arm
+                .setPivot(Arm.State.REST)
+                .alongWith(manipulator.set(Manipulator.State.STOP));
     }
 
     public Command driving() {
-        return arm.setPivot(ArmSubsystem.State.FULL)
-                .andThen(manipulator.set(ManipulatorSubsystem.State.STOP));
+        return arm
+                .setPivot(Arm.State.FULL)
+                .andThen(manipulator.set(Manipulator.State.STOP));
+    }
+
+    public Command exchange() {
+        return drive
+                .pathFindToTag(vision.bestTagFor(AprilTagLocation.EXCHANGE))
+                .alongWith(arm.setPivot(Arm.State.EXCHANGE))
+                .andThen(manipulator.set(Manipulator.State.EJECT));
+    }
+
+    public Command exchangeReturn() {
+        return drive
+                .pathFindToTag(vision.bestTagFor(AprilTagLocation.EXCHANGE))
+                .alongWith(arm.setPivot(Arm.State.EXCHANGE_RETURN))
+                .andThen(manipulator.set(Manipulator.State.GRAB));
+    }
+
+    public Command portal() {
+        return drive
+                .pathFindToTag(vision.bestTagFor(AprilTagLocation.PORTAL))
+                .alongWith(arm.setPivot(Arm.State.PORTAL))
+                .andThen(manipulator.set(Manipulator.State.GRAB));
     }
 
     public Command depositToSwitch() {
-        return drive.pathFindToTag(1, new Transform2d())
-                .alongWith(arm.setPivot(ArmSubsystem.State.SWITCH))
-                .andThen(manipulator.set(ManipulatorSubsystem.State.EJECT));
+        return drive
+                .pathFindToTag(vision.bestTagFor(AprilTagLocation.SWITCH))
+                .alongWith(arm.setPivot(Arm.State.SWITCH))
+                .andThen(manipulator.set(Manipulator.State.EJECT));
     }
 
     /**

@@ -2,11 +2,14 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.ironriders.constants.Arm;
 import org.ironriders.lib.Path;
+import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
 import swervelib.SwerveController;
@@ -40,7 +43,7 @@ public class DriveCommands {
      */
     public Command teleopCommand(DoubleSupplier x, DoubleSupplier y, DoubleSupplier a) {
         return drive(
-                () -> swerve.swerveController.getTargetSpeeds(
+                () -> swerve.getSwerveController().getTargetSpeeds(
                         x.getAsDouble(),
                         y.getAsDouble(),
                         a.getAsDouble() * 2 + swerve.getYaw().getRadians(),
@@ -119,6 +122,10 @@ public class DriveCommands {
         );
     }
 
+    public Command pathFindToTag(int id) {
+        return pathFindToTag(id, -Arm.LENGTH_FROM_ORIGIN);
+    }
+
     /**
      * Generates a path to a specified target identified by a vision tag. This will run only if the id is provided if
      * the id is not provided it will return Command that does nothing and immediately closes itself.
@@ -127,16 +134,14 @@ public class DriveCommands {
      * @param offset The transformation to be applied to the identified target's pose.
      * @return A Command object representing the generated path to the identified target.
      */
-    public Command pathFindToTag(int id, Transform2d offset) {
-        Optional<Pose3d> optionalPose = vision.getTagLayout().getTagPose(id);
-        if (optionalPose.isEmpty()) {
+    public Command pathFindToTag(int id, double offset) {
+        Optional<Pose3d> pose = vision.getTag(id);
+        if (pose.isEmpty()) {
             return Commands.none();
         }
 
         return useVisionForPoseEstimation(
-                pathFindTo(optionalPose.get().toPose2d().plus(
-                        offset.inverse().plus(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)))
-                ))
+                pathFindTo(Utils.accountedPose(pose.get().toPose2d(), offset))
         );
     }
 

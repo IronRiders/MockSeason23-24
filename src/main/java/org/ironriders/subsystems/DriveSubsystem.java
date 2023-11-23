@@ -6,6 +6,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Drive;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
@@ -20,6 +21,7 @@ import static org.ironriders.constants.Robot.Wheels.DRIVE_CONVERSION_FACTOR;
 import static org.ironriders.constants.Robot.Wheels.STEERING_CONVERSION_FACTOR;
 
 public class DriveSubsystem extends SubsystemBase {
+    public final DriveCommands commands;
     private final VisionSubsystem vision = new VisionSubsystem();
     private final SwerveDrive swerveDrive;
 
@@ -46,6 +48,8 @@ public class DriveSubsystem extends SubsystemBase {
                 ),
                 this
         );
+
+        commands = new DriveCommands(this);
     }
 
     @Override
@@ -54,6 +58,10 @@ public class DriveSubsystem extends SubsystemBase {
                 estimatedRobotPose.estimatedPose.toPose2d(),
                 estimatedRobotPose.timestampSeconds
         ));
+    }
+
+    public DriveCommands getCommands() {
+        return commands;
     }
 
     public void setGyro(Rotation3d rotation) {

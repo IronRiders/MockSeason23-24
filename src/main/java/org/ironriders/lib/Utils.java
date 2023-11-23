@@ -1,5 +1,9 @@
 package org.ironriders.lib;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+
 /**
  * Utility class containing various helper methods for mathematical and control operations.
  */
@@ -29,6 +33,25 @@ public class Utils {
      */
     public static double absoluteRotation(double input) {
         return (input % 360 + 360) % 360;
+    }
+
+    /**
+     * Adjusts a given Transform2d by applying a translation offset, considering the rotation of the origin.
+     * The offset is modified based on the alliance obtained from DriverStation.getAlliance().
+     *
+     * @param origin The original Transform2d to be adjusted.
+     * @param offset The translation offset to be applied.
+     * @return A new Transform2d representing the adjusted position.
+     */
+    public static Pose2d accountedPose(Pose2d origin, double offset) {
+        double angle = origin.getRotation().getRadians();
+
+        return origin.plus(
+                new Transform2d(
+                        new Translation2d(offset * Math.cos(angle), offset * Math.sin(angle)),
+                        origin.getRotation()
+                )
+        );
     }
 
     /**

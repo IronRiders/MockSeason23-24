@@ -1,5 +1,7 @@
 package org.ironriders.constants;
 
+import java.util.Arrays;
+
 /**
  * Contains game specific constants.
  * <p>
@@ -13,6 +15,22 @@ package org.ironriders.constants;
  */
 public class Game {
     public static class Field {
+        public enum AprilTagLocation {
+            EXCHANGE(1, 2),
+            PORTAL(3, 4, 5, 6),
+            SWITCH(7, 8, 9, 10, 11, 12, 13, 14);
+
+            final int[] ids;
+
+            AprilTagLocation(int... ids) {
+                this.ids = ids;
+            }
+
+            public boolean has(int id) {
+                return Arrays.stream(ids).anyMatch(i -> i == id);
+            }
+        }
+
         public static class Dimensions {
             /**
              * In FT.

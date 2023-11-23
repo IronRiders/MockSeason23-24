@@ -1,8 +1,10 @@
 package org.ironriders.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.ironriders.constants.Game;
 import org.ironriders.lib.VisionPipeline;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -50,6 +52,19 @@ public class VisionSubsystem extends SubsystemBase {
             return estimator.update();
         }
         return Optional.empty();
+    }
+
+    public int bestTagFor(Game.Field.AprilTagLocation location) {
+        setPipeline(APRIL_TAGS);
+        if (!getResult().hasTargets() || !location.has(getResult().getBestTarget().getFiducialId())) {
+            return 0;
+        }
+
+        return getResult().getBestTarget().getFiducialId();
+    }
+
+    public Optional<Pose3d> getTag(int id) {
+        return getTagLayout().getTagPose(id);
     }
 
     public void useVisionForPoseEstimation(boolean useVision) {
