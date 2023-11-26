@@ -25,15 +25,16 @@ public class RobotCommands {
         vision = drive.getVision();
         this.manipulator = manipulator.getCommands();
 
-        NamedCommands.registerCommand("Reset", reset());
+        NamedCommands.registerCommand("Resting", Resting());
         NamedCommands.registerCommand("Driving", driving());
+        NamedCommands.registerCommand("Ground Pickup", groundPickup());
         NamedCommands.registerCommand("Exchange", exchange());
         NamedCommands.registerCommand("Exchange Return", exchangeReturn());
         NamedCommands.registerCommand("Portal", portal());
-        NamedCommands.registerCommand("Switch", depositToSwitch());
+        NamedCommands.registerCommand("Switch", switchDropOff());
     }
 
-    public Command reset() {
+    public Command Resting() {
         return arm
                 .setPivot(Arm.State.REST)
                 .alongWith(manipulator.set(Manipulator.State.STOP));
@@ -43,6 +44,11 @@ public class RobotCommands {
         return arm
                 .setPivot(Arm.State.FULL)
                 .andThen(manipulator.set(Manipulator.State.STOP));
+    }
+
+    public Command groundPickup() {
+        return driving()
+                .andThen(manipulator.set(Manipulator.State.GRAB));
     }
 
     public Command exchange() {
@@ -66,7 +72,7 @@ public class RobotCommands {
                 .andThen(manipulator.set(Manipulator.State.GRAB));
     }
 
-    public Command depositToSwitch() {
+    public Command switchDropOff() {
         return drive
                 .pathFindToTag(vision.bestTagFor(AprilTagLocation.SWITCH))
                 .alongWith(arm.setPivot(Arm.State.SWITCH))

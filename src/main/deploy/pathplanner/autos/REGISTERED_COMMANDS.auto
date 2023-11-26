@@ -14,13 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Reset"
+            "name": "Resting"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Driving"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Ground Pickup"
           }
         },
         {

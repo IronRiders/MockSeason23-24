@@ -47,7 +47,7 @@ public class RobotContainer {
                 )
         );
 
-        controller.button(1).onTrue(commands.depositToSwitch());
+        controller.button(1).onTrue(commands.switchDropOff());
     }
 
     private double controlCurve(double input) {
