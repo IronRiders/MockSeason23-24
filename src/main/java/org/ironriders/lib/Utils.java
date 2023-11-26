@@ -1,6 +1,7 @@
 package org.ironriders.lib;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -37,7 +38,7 @@ public class Utils {
 
     /**
      * Adjusts a given Transform2d by applying a translation offset, considering the rotation of the origin.
-     * The offset is modified based on the alliance obtained from DriverStation.getAlliance().
+     * The offset is modified based on the alliance obtained from DriverStation.getAlliance(). Also rotates by 180.
      *
      * @param origin The original Transform2d to be adjusted.
      * @param offset The translation offset to be applied.
@@ -49,7 +50,7 @@ public class Utils {
         return origin.plus(
                 new Transform2d(
                         new Translation2d(offset * Math.cos(angle), offset * Math.sin(angle)),
-                        origin.getRotation()
+                        new Rotation2d()
                 )
         );
     }

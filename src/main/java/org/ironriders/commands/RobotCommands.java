@@ -1,6 +1,7 @@
 package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.ironriders.constants.Arm;
 import org.ironriders.constants.Manipulator;
@@ -23,6 +24,13 @@ public class RobotCommands {
         this.drive = drive.getCommands();
         vision = drive.getVision();
         this.manipulator = manipulator.getCommands();
+
+        NamedCommands.registerCommand("Reset", reset());
+        NamedCommands.registerCommand("Driving", driving());
+        NamedCommands.registerCommand("Exchange", exchange());
+        NamedCommands.registerCommand("Exchange Return", exchangeReturn());
+        NamedCommands.registerCommand("Portal", portal());
+        NamedCommands.registerCommand("Switch", depositToSwitch());
     }
 
     public Command reset() {
