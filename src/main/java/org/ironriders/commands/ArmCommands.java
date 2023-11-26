@@ -16,10 +16,10 @@ public class ArmCommands {
     public ArmCommands(ArmSubsystem arm) {
         this.arm = arm;
 
-        NamedCommands.registerCommand("Rest Pivot", setPivot(REST));
-        NamedCommands.registerCommand("Switch Pivot", setPivot(SWITCH));
-        NamedCommands.registerCommand("Portal Pivot", setPivot(PORTAL));
-        NamedCommands.registerCommand("Full Pivot", setPivot(FULL));
+        NamedCommands.registerCommand("Pivot Rest", setPivot(REST));
+        NamedCommands.registerCommand("Pivot Switch", setPivot(SWITCH));
+        NamedCommands.registerCommand("Pivot Portal", setPivot(PORTAL));
+        NamedCommands.registerCommand("Pivot Full", setPivot(FULL));
     }
 
     public Command setPivot(Arm.State preset) {

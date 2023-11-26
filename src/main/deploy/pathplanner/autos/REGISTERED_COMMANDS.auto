@@ -1,0 +1,96 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 2,
+      "y": 2
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Reset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Driving"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Exchange"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Exchange Return"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Portal"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Switch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pivot Rest"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pivot Switch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pivot Portal"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pivot Full"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Manipulator Grab"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Manipulator Eject"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Manipulator Stop"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null
+}

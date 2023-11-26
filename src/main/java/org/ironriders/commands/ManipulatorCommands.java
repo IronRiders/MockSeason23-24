@@ -14,9 +14,9 @@ public class ManipulatorCommands {
     public ManipulatorCommands(ManipulatorSubsystem manipulatorSubsystem) {
         manipulator = manipulatorSubsystem;
 
-        NamedCommands.registerCommand("Grab", grab());
-        NamedCommands.registerCommand("Eject", eject());
-        NamedCommands.registerCommand("Stop Manipulator", stop());
+        NamedCommands.registerCommand("Manipulator Grab", grab());
+        NamedCommands.registerCommand("Manipulator Eject", eject());
+        NamedCommands.registerCommand("Manipulator Stop", stop());
     }
 
     public Command set(Manipulator.State state) {
