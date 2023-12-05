@@ -16,6 +16,12 @@
           "data": {
             "name": "Exchange Return"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
         }
       ]
     }

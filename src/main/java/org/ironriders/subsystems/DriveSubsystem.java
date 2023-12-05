@@ -54,10 +54,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        getVision().getPoseEstimate().ifPresent(estimatedRobotPose -> swerveDrive.addVisionMeasurement(
-                estimatedRobotPose.estimatedPose.toPose2d(),
-                estimatedRobotPose.timestampSeconds
-        ));
+        getVision().getPoseEstimate().ifPresent(estimatedRobotPose -> {
+            swerveDrive.resetOdometry(estimatedRobotPose.estimatedPose.toPose2d());
+            swerveDrive.setGyro(estimatedRobotPose.estimatedPose.getRotation());
+//            swerveDrive.addVisionMeasurement(
+//                    estimatedRobotPose.estimatedPose.toPose2d(),
+//                    estimatedRobotPose.timestampSeconds
+//            );
+//            swerveDrive.setGyro(estimatedRobotPose.estimatedPose.getRotation());
+        });
     }
 
     public DriveCommands getCommands() {

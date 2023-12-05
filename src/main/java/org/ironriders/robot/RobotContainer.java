@@ -47,7 +47,7 @@ public class RobotContainer {
                 )
         );
 
-        controller.button(1).onTrue(commands.switchDropOff());
+        controller.button(2).onTrue(driveCommands.pathFindToTag(1));
     }
 
     private double controlCurve(double input) {
@@ -60,6 +60,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return driveCommands.pathFindToTag(10);
+        return commands.exchange();
     }
 }

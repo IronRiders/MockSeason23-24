@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.ironriders.constants.Robot.LIMELIGHT_POSITION;
 import static org.ironriders.constants.Vision.APRIL_TAG_FIELD_LAYOUT_LOCATION;
 import static org.ironriders.lib.VisionPipeline.APRIL_TAGS;
-import static org.photonvision.PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS;
+import static org.photonvision.PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY;
 
 public class VisionSubsystem extends SubsystemBase {
     private final PhotonCamera camera = new PhotonCamera("LIMELIGHT");
@@ -35,7 +35,7 @@ public class VisionSubsystem extends SubsystemBase {
             throw new RuntimeException(e);
         }
 
-        estimator = new PhotonPoseEstimator(tagLayout, AVERAGE_BEST_TARGETS, camera, LIMELIGHT_POSITION);
+        estimator = new PhotonPoseEstimator(tagLayout, LOWEST_AMBIGUITY, camera, LIMELIGHT_POSITION);
 
         setPipeline(APRIL_TAGS);
         camera.setLED(VisionLEDMode.kOff);
@@ -56,7 +56,10 @@ public class VisionSubsystem extends SubsystemBase {
 
     public int bestTagFor(Game.Field.AprilTagLocation location) {
         setPipeline(APRIL_TAGS);
-        if (!getResult().hasTargets() || !location.has(getResult().getBestTarget().getFiducialId())) {
+        if (!getResult().hasTargets()) {
+            return 0;
+        }
+        if (!location.has(getResult().getBestTarget().getFiducialId())) {
             return 0;
         }
 

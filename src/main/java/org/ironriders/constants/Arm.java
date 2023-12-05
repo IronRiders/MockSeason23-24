@@ -3,7 +3,7 @@ package org.ironriders.constants;
 import edu.wpi.first.math.util.Units;
 
 public class Arm {
-    public static final double LENGTH_FROM_ORIGIN = Units.inchesToMeters(18);
+    public static final double LENGTH_FROM_ORIGIN = Units.inchesToMeters(50);
 
     public enum State {
         REST(0),

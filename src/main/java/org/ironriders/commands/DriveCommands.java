@@ -118,7 +118,7 @@ public class DriveCommands {
                 target,
                 CONSTRAINTS,
                 preserveEndVelocity ? CONSTRAINTS.getMaxVelocityMps() : 0
-        );
+        ).withTimeout(7);
     }
 
     public Command pathFindToTag(int id) {

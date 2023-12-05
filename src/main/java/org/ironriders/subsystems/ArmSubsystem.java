@@ -46,6 +46,8 @@ public class ArmSubsystem extends SubsystemBase {
         encoder.setPositionOffset(ENCODER_OFFSET);
         encoder.setDistancePerRotation(360);
 
+        follower.follow(leader, true);
+
         pid.setSetpoint(getPosition());
 
         commands = new ArmCommands(this);
