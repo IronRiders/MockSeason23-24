@@ -39,15 +39,18 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        drive.setDefaultCommand(
-                driveCommands.teleopCommand(
-                        () -> -controlCurve(controller.getLeftY()),
-                        () -> -controlCurve(controller.getLeftX()),
-                        () -> -controlCurve(controller.getRightX())
-                )
-        );
+//        drive.setDefaultCommand(
+//                driveCommands.teleopCommand(
+//                        () -> -controlCurve(controller.getLeftY()),
+//                        () -> -controlCurve(controller.getLeftX()),
+//                        () -> -controlCurve(controller.getRightX())
+//                )
+//        );
 
-        controller.button(2).onTrue(driveCommands.pathFindToTag(1));
+        controller.a().onTrue(arm.getCommands().setPivot(70));
+        controller.b().onTrue(arm.getCommands().setPivot(20));
+
+        // controller.button(1).onTrue(driveCommands.pathFindToTag(1));
     }
 
     private double controlCurve(double input) {
@@ -60,6 +63,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return commands.exchange();
+        return arm.getCommands().setPivot(70).andThen(arm.getCommands().setPivot(20));
     }
 }

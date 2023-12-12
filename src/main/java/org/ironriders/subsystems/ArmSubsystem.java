@@ -2,13 +2,15 @@ package org.ironriders.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.ArmCommands;
 import org.ironriders.constants.Ports;
+import org.ironriders.lib.Utils;
 
-import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
+import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMax.SoftLimitDirection.kForward;
 import static com.revrobotics.CANSparkMax.SoftLimitDirection.kReverse;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
@@ -20,19 +22,13 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax leader = new CANSparkMax(Ports.Arm.RIGHT_MOTOR, kBrushless);
     @SuppressWarnings("FieldCanBeLocal")
     private final CANSparkMax follower = new CANSparkMax(Ports.Arm.LEFT_MOTOR, kBrushless);
-    private final DutyCycleEncoder encoder = new DutyCycleEncoder(Ports.Arm.ENCODER);
-    private final PIDController pid = new PIDController(P, I, D);
+    private final DutyCycleEncoder primaryEncoder = new DutyCycleEncoder(Ports.Arm.PRIMARY_ENCODER);
+    private final DutyCycleEncoder secondaryEncoder = new DutyCycleEncoder(Ports.Arm.SECONDARY_ENCODER);
+    private final ProfiledPIDController pid = new ProfiledPIDController(P, I, D, PROFILE);
 
     public ArmSubsystem() {
         leader.setSmartCurrentLimit(CURRENT_LIMIT);
         follower.setSmartCurrentLimit(CURRENT_LIMIT);
-        leader.setIdleMode(kBrake);
-        follower.setIdleMode(kBrake);
-
-        leader.getEncoder().setPosition(getPosition());
-        follower.getEncoder().setPosition(getPosition());
-        leader.getEncoder().setPositionConversionFactor(GEARING * 360);
-        follower.getEncoder().setPositionConversionFactor(GEARING * 360);
 
         leader.setSoftLimit(kReverse, Limit.REVERSE);
         leader.enableSoftLimit(kReverse, true);
@@ -43,18 +39,38 @@ public class ArmSubsystem extends SubsystemBase {
         follower.setSoftLimit(kForward, Limit.FORWARD);
         follower.enableSoftLimit(kForward, true);
 
-        encoder.setPositionOffset(ENCODER_OFFSET);
-        encoder.setDistancePerRotation(360);
+        primaryEncoder.setPositionOffset(PRIMARY_ENCODER_OFFSET);
+        primaryEncoder.setDistancePerRotation(360);
+        secondaryEncoder.setPositionOffset(SECONDARY_ENCODER_OFFSET);
+        secondaryEncoder.setDistancePerRotation(360); // try -
 
-        follower.follow(leader, true);
-
-        pid.setSetpoint(getPosition());
+        follower.follow(leader);
+        pid.reset(getPosition());
 
         commands = new ArmCommands(this);
     }
 
+    /*
+    TODO: Test
+    See if we need break mode
+     */
+
     @Override
     public void periodic() {
+        leader.getEncoder().setPosition(getPrimaryPosition());
+        follower.getEncoder().setPosition(getSecondaryPosition());
+        leader.setIdleMode(kCoast);
+        follower.setIdleMode(kCoast);
+
+        SmartDashboard.putNumber("Left Encoder", getSecondaryPosition());
+        SmartDashboard.putNumber("Right Encoder", getPrimaryPosition());
+
+        SmartDashboard.putNumber("Integrated Left Encoder", follower.getEncoder().getPosition());
+        SmartDashboard.putNumber("Integrated Right Encoder", leader.getEncoder().getPosition());
+
+        SmartDashboard.putNumber("pid", MathUtil.clamp(pid.calculate(getPosition()), -1, 1) * SPEED);
+        SmartDashboard.putBoolean("at target", Utils.isWithinTolerance(getPosition(), pid.getSetpoint().position, TOLERANCE));
+
         leader.set(MathUtil.clamp(pid.calculate(getPosition()), -1, 1) * SPEED);
     }
 
@@ -66,14 +82,23 @@ public class ArmSubsystem extends SubsystemBase {
         set(state.getPosition());
     }
 
+    public double getPrimaryPosition() {
+        return primaryEncoder.getDistance() + PRIMARY_ENCODER_OFFSET;
+    }
+
+    public double getSecondaryPosition() {
+        return -(secondaryEncoder.getDistance() + SECONDARY_ENCODER_OFFSET);
+    }
+
     /**
      * In degrees.
      */
     public double getPosition() {
-        return encoder.getAbsolutePosition();
+        return getPrimaryPosition();
     }
 
     public void set(double target) {
-        pid.setSetpoint(target);
+        pid.reset(getPosition());
+        pid.setGoal(target);
     }
 }

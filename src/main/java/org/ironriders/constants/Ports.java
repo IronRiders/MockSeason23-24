@@ -18,14 +18,14 @@ public class Ports {
         public static class S1 {
             public static final int RSL = 0;
         }
-
     }
 
     public static class Arm {
         public static final int RIGHT_MOTOR = 10;
         public static final int LEFT_MOTOR = 11;
 
-        public static final int ENCODER = 0;
+        public static final int PRIMARY_ENCODER = 0;
+        public static final int SECONDARY_ENCODER = 1;
     }
 
     public static class Manipulator {
