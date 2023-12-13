@@ -2,19 +2,15 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.ironriders.constants.Arm;
 import org.ironriders.lib.Path;
-import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
-import org.ironriders.subsystems.VisionSubsystem;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
-import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -24,11 +20,9 @@ import static org.ironriders.constants.Drive.MAX_SPEED;
 public class DriveCommands {
     private final DriveSubsystem drive;
     private final SwerveDrive swerve;
-    private final VisionSubsystem vision;
 
     public DriveCommands(DriveSubsystem drive) {
         this.drive = drive;
-        this.vision = drive.getVision();
         this.swerve = drive.getSwerveDrive();
     }
 
@@ -121,31 +115,6 @@ public class DriveCommands {
         ).withTimeout(7);
     }
 
-    public Command pathFindToTag(int id) {
-        return pathFindToTag(id, -Arm.LENGTH_FROM_ORIGIN);
-    }
-
-    /**
-     * Generates a path to a specified target identified by a vision tag. This will run only if the id is provided if
-     * the id is not provided it will return Command that does nothing and immediately closes itself.
-     *
-     * @param id     The identifier of the vision tag.
-     * @param offset The transformation to be applied to the identified target's pose.
-     * @return A Command object representing the generated path to the identified target.
-     */
-    public Command pathFindToTag(int id, double offset) {
-        Optional<Pose3d> pose = vision.getTag(id);
-        if (pose.isEmpty()) {
-            return Commands.none();
-        }
-
-        return useVisionForPoseEstimation(
-                pathFindTo(Utils.accountedPose(pose.get().toPose2d(), offset).plus(
-                        new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180))
-                ))
-        );
-    }
-
     /**
      * Generates a command to make the robot follow a pre-defined path with the default settings of preserveEndVelocity
      * false and resetOdometry false.
@@ -192,23 +161,7 @@ public class DriveCommands {
             return AutoBuilder.followPathWithEvents(pathPlannerPath);
         }
 
-        return useVisionForPoseEstimation(
-                pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity)
-                        .andThen(AutoBuilder.followPathWithEvents(pathPlannerPath))
-        );
-    }
-
-    /**
-     * A utility method that temporarily enables vision-based pose estimation, executes a specified command,
-     * and then disables vision-based pose estimation again.
-     *
-     * @param command The Command object to be executed after enabling vision-based pose estimation.
-     * @return A new Command object representing the sequence of actions including vision-based pose estimation.
-     */
-    public Command useVisionForPoseEstimation(Command command) {
-        return Commands
-                .runOnce(() -> vision.useVisionForPoseEstimation(true))
-                .andThen(command)
-                .andThen(Commands.runOnce(() -> vision.useVisionForPoseEstimation(false)));
+        return pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity)
+                .andThen(AutoBuilder.followPathWithEvents(pathPlannerPath));
     }
 }

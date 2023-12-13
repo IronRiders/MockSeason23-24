@@ -9,29 +9,20 @@ import org.ironriders.lib.AutoConfig;
 import org.ironriders.subsystems.ArmSubsystem;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
-import org.ironriders.subsystems.VisionSubsystem;
-
-import static org.ironriders.constants.Game.Field.AprilTagLocation;
 
 public class RobotCommands {
     private final ArmCommands arm;
     private final DriveCommands drive;
-    private final VisionSubsystem vision;
     private final ManipulatorCommands manipulator;
 
     public RobotCommands(ArmSubsystem arm, DriveSubsystem drive, ManipulatorSubsystem manipulator) {
         this.arm = arm.getCommands();
         this.drive = drive.getCommands();
-        vision = drive.getVision();
         this.manipulator = manipulator.getCommands();
 
         NamedCommands.registerCommand("Resting", Resting());
         NamedCommands.registerCommand("Driving", driving());
         NamedCommands.registerCommand("Ground Pickup", groundPickup());
-        NamedCommands.registerCommand("Exchange", exchange());
-        NamedCommands.registerCommand("Exchange Return", exchangeReturn());
-        NamedCommands.registerCommand("Portal", portal());
-        NamedCommands.registerCommand("Switch", switchDropOff());
     }
 
     public Command Resting() {
@@ -50,35 +41,6 @@ public class RobotCommands {
         return driving()
                 .andThen(manipulator.set(Manipulator.State.GRAB));
     }
-
-    public Command exchange() {
-        return drive
-                .pathFindToTag(vision.bestTagFor(AprilTagLocation.EXCHANGE))
-                .alongWith(arm.setPivot(Arm.State.EXCHANGE))
-                .andThen(manipulator.set(Manipulator.State.EJECT));
-    }
-
-    public Command exchangeReturn() {
-        return drive
-                .pathFindToTag(vision.bestTagFor(AprilTagLocation.EXCHANGE))
-                .alongWith(arm.setPivot(Arm.State.EXCHANGE_RETURN))
-                .andThen(manipulator.set(Manipulator.State.GRAB));
-    }
-
-    public Command portal() {
-        return drive
-                .pathFindToTag(vision.bestTagFor(AprilTagLocation.PORTAL))
-                .alongWith(arm.setPivot(Arm.State.PORTAL))
-                .andThen(manipulator.set(Manipulator.State.GRAB));
-    }
-
-    public Command switchDropOff() {
-        return drive
-                .pathFindToTag(vision.bestTagFor(AprilTagLocation.SWITCH))
-                .alongWith(arm.setPivot(Arm.State.SWITCH))
-                .andThen(manipulator.set(Manipulator.State.EJECT));
-    }
-
     /**
      * Builds an autonomous command based on the provided {@code AutoConfig}.
      *

@@ -22,7 +22,6 @@ import static org.ironriders.constants.Robot.Wheels.STEERING_CONVERSION_FACTOR;
 
 public class DriveSubsystem extends SubsystemBase {
     public final DriveCommands commands;
-    private final VisionSubsystem vision = new VisionSubsystem();
     private final SwerveDrive swerveDrive;
 
     public DriveSubsystem() {
@@ -51,30 +50,12 @@ public class DriveSubsystem extends SubsystemBase {
 
         commands = new DriveCommands(this);
     }
-
-    @Override
-    public void periodic() {
-        getVision().getPoseEstimate().ifPresent(estimatedRobotPose -> {
-            swerveDrive.resetOdometry(estimatedRobotPose.estimatedPose.toPose2d());
-            swerveDrive.setGyro(estimatedRobotPose.estimatedPose.getRotation());
-//            swerveDrive.addVisionMeasurement(
-//                    estimatedRobotPose.estimatedPose.toPose2d(),
-//                    estimatedRobotPose.timestampSeconds
-//            );
-//            swerveDrive.setGyro(estimatedRobotPose.estimatedPose.getRotation());
-        });
-    }
-
     public DriveCommands getCommands() {
         return commands;
     }
 
     public void setGyro(Rotation3d rotation) {
         swerveDrive.setGyro(new Rotation3d());
-    }
-
-    public VisionSubsystem getVision() {
-        return vision;
     }
 
     public SwerveDrive getSwerveDrive() {
