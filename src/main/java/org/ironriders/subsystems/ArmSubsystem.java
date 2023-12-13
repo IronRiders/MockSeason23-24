@@ -30,6 +30,17 @@ public class ArmSubsystem extends SubsystemBase {
         leader.setSmartCurrentLimit(CURRENT_LIMIT);
         follower.setSmartCurrentLimit(CURRENT_LIMIT);
 
+        leader.setIdleMode(kCoast);
+        follower.setIdleMode(kCoast);
+
+        primaryEncoder.setPositionOffset(PRIMARY_ENCODER_OFFSET);
+        primaryEncoder.setDistancePerRotation(360);
+        secondaryEncoder.setPositionOffset(SECONDARY_ENCODER_OFFSET);
+        secondaryEncoder.setDistancePerRotation(360);
+
+        leader.getEncoder().setPositionConversionFactor(360.0 / GEARING);
+        leader.getEncoder().setPosition(getPrimaryPosition());
+
         leader.setSoftLimit(kReverse, Limit.REVERSE);
         leader.enableSoftLimit(kReverse, true);
         leader.setSoftLimit(kForward, Limit.FORWARD);
@@ -39,13 +50,8 @@ public class ArmSubsystem extends SubsystemBase {
         follower.setSoftLimit(kForward, Limit.FORWARD);
         follower.enableSoftLimit(kForward, true);
 
-        primaryEncoder.setPositionOffset(PRIMARY_ENCODER_OFFSET);
-        primaryEncoder.setDistancePerRotation(360);
-        secondaryEncoder.setPositionOffset(SECONDARY_ENCODER_OFFSET);
-        secondaryEncoder.setDistancePerRotation(360); // try -
-
         follower.follow(leader);
-        pid.reset(getPosition());
+        pid.setGoal(getPosition());
 
         commands = new ArmCommands(this);
     }
@@ -57,16 +63,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        leader.getEncoder().setPosition(getPrimaryPosition());
-        follower.getEncoder().setPosition(getSecondaryPosition());
-        leader.setIdleMode(kCoast);
-        follower.setIdleMode(kCoast);
-
         SmartDashboard.putNumber("Left Encoder", getSecondaryPosition());
+        SmartDashboard.putNumber("Right Int Encoder", leader.getEncoder().getPosition());
         SmartDashboard.putNumber("Right Encoder", getPrimaryPosition());
-
-        SmartDashboard.putNumber("Integrated Left Encoder", follower.getEncoder().getPosition());
-        SmartDashboard.putNumber("Integrated Right Encoder", leader.getEncoder().getPosition());
+        SmartDashboard.putNumber("Target", pid.getGoal().position);
 
         SmartDashboard.putNumber("pid", MathUtil.clamp(pid.calculate(getPosition()), -1, 1) * SPEED);
         SmartDashboard.putBoolean("at target", Utils.isWithinTolerance(getPosition(), pid.getSetpoint().position, TOLERANCE));
@@ -76,10 +76,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmCommands getCommands() {
         return commands;
-    }
-
-    public void set(State state) {
-        set(state.getPosition());
     }
 
     public double getPrimaryPosition() {

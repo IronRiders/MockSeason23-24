@@ -25,15 +25,16 @@ public class Arm {
         }
     }
 
-    public static final double SPEED = 1;
+    public static final double SPEED = 0.3;
     public static final double TOLERANCE = 0.5;
+    public static final double GEARING = 0.5;
     public static final double PRIMARY_ENCODER_OFFSET = -124;
     public static final double SECONDARY_ENCODER_OFFSET = -140;
-    public static final int CURRENT_LIMIT = 40;
+    public static final int CURRENT_LIMIT = 1;
 
     public static class Limit {
         public static final float REVERSE = 0;
-        public static final float FORWARD = 90;
+        public static final float FORWARD = 80;
     }
 
     public static class PIDFF {
