@@ -38,11 +38,11 @@ public class ManipulatorSubsystem extends SubsystemBase {
     }
 
     private void grab() {
-        leader.set(GRAB_SPEED);
+        leader.set(-GRAB_SPEED);
     }
 
     private void eject() {
-        leader.set(-EJECT_SPEED);
+        leader.set(EJECT_SPEED);
     }
 
     private void stop() {

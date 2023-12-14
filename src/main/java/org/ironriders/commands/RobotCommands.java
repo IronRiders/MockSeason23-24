@@ -25,7 +25,7 @@ public class RobotCommands {
         vision = drive.getVision();
         this.manipulator = manipulator.getCommands();
 
-        NamedCommands.registerCommand("Resting", Resting());
+        NamedCommands.registerCommand("Resting", resting());
         NamedCommands.registerCommand("Driving", driving());
         NamedCommands.registerCommand("Ground Pickup", groundPickup());
         NamedCommands.registerCommand("Exchange", exchange());
@@ -34,7 +34,7 @@ public class RobotCommands {
         NamedCommands.registerCommand("Switch", switchDropOff());
     }
 
-    public Command Resting() {
+    public Command resting() {
         return arm
                 .setPivot(Arm.State.REST)
                 .alongWith(manipulator.set(Manipulator.State.STOP));

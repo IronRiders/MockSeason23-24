@@ -20,7 +20,8 @@ public class ManipulatorCommands {
     }
 
     public Command set(Manipulator.State state) {
-        return Commands.runOnce(() -> manipulator.set(state), manipulator);
+        return Commands.runOnce(() -> manipulator.set(state), manipulator)
+                .andThen(waitThenStop(0.7).onlyIf(() -> state.equals(STOP)));
     }
 
     private Command grab() {
@@ -28,10 +29,16 @@ public class ManipulatorCommands {
     }
 
     private Command eject() {
-        return Commands.runOnce(() -> set(EJECT), manipulator);
+        return Commands
+                .runOnce(() -> set(EJECT), manipulator)
+                .andThen(waitThenStop(0.7));
     }
 
     private Command stop() {
         return Commands.runOnce(() -> set(STOP), manipulator);
+    }
+
+    public Command waitThenStop(double seconds) {
+        return Commands.none().withTimeout(0.5).andThen(stop());
     }
 }

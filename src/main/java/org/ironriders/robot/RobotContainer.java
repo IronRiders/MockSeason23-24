@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.commands.RobotCommands;
+import org.ironriders.constants.Manipulator;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
@@ -47,10 +48,20 @@ public class RobotContainer {
 //                )
 //        );
 
-        controller.a().onTrue(arm.getCommands().setPivot(70));
-        controller.b().onTrue(arm.getCommands().setPivot(20));
-
-        // controller.button(1).onTrue(driveCommands.pathFindToTag(1));
+        controller.a().onTrue(
+                arm.getCommands().setPivot(0).andThen(
+                        manipulator.getCommands().set(Manipulator.State.GRAB)
+                ).andThen(manipulator.getCommands().waitThenStop(1))
+        );
+        controller.b().onTrue(
+                arm.getCommands().setPivot(0).andThen(
+                        manipulator.getCommands().set(Manipulator.State.EJECT)
+                )
+        );
+        controller.x().onTrue(
+                arm.getCommands().setPivot(30)
+        );
+        controller.y().onTrue(manipulator.getCommands().waitThenStop(1));
     }
 
     private double controlCurve(double input) {

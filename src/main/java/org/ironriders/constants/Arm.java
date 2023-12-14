@@ -25,16 +25,15 @@ public class Arm {
         }
     }
 
-    public static final double SPEED = 0.3;
     public static final double TOLERANCE = 0.5;
-    public static final double GEARING = 0.5;
+    public static final double GEARING = 500;
     public static final double PRIMARY_ENCODER_OFFSET = -124;
-    public static final double SECONDARY_ENCODER_OFFSET = -140;
-    public static final int CURRENT_LIMIT = 1;
+    public static final double SECONDARY_ENCODER_OFFSET = 44;
+    public static final int CURRENT_LIMIT = 15;
 
     public static class Limit {
         public static final float REVERSE = 0;
-        public static final float FORWARD = 80;
+        public static final float FORWARD = 70;
     }
 
     public static class PIDFF {
@@ -43,6 +42,6 @@ public class Arm {
         public static final double D = 0;
 
         public static final TrapezoidProfile.Constraints PROFILE =
-                new TrapezoidProfile.Constraints(1, 1);
+                new TrapezoidProfile.Constraints(12, 7);
     }
 }

@@ -1,14 +1,12 @@
 package org.ironriders.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.ArmCommands;
 import org.ironriders.constants.Ports;
-import org.ironriders.lib.Utils;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMax.SoftLimitDirection.kForward;
@@ -41,6 +39,9 @@ public class ArmSubsystem extends SubsystemBase {
         leader.getEncoder().setPositionConversionFactor(360.0 / GEARING);
         leader.getEncoder().setPosition(getPrimaryPosition());
 
+        follower.getEncoder().setPositionConversionFactor(360.0 / GEARING);
+        follower.getEncoder().setPosition(getPrimaryPosition());
+
         leader.setSoftLimit(kReverse, Limit.REVERSE);
         leader.enableSoftLimit(kReverse, true);
         leader.setSoftLimit(kForward, Limit.FORWARD);
@@ -50,7 +51,8 @@ public class ArmSubsystem extends SubsystemBase {
         follower.setSoftLimit(kForward, Limit.FORWARD);
         follower.enableSoftLimit(kForward, true);
 
-        follower.follow(leader);
+        follower.follow(leader, true);
+        pid.reset(getPosition());
         pid.setGoal(getPosition());
 
         commands = new ArmCommands(this);
@@ -64,14 +66,14 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Left Encoder", getSecondaryPosition());
+        SmartDashboard.putNumber("Left Encoder Int", follower.getEncoder().getPosition());
         SmartDashboard.putNumber("Right Int Encoder", leader.getEncoder().getPosition());
         SmartDashboard.putNumber("Right Encoder", getPrimaryPosition());
-        SmartDashboard.putNumber("Target", pid.getGoal().position);
+        SmartDashboard.putNumber("Target", pid.getSetpoint().position);
 
-        SmartDashboard.putNumber("pid", MathUtil.clamp(pid.calculate(getPosition()), -1, 1) * SPEED);
-        SmartDashboard.putBoolean("at target", Utils.isWithinTolerance(getPosition(), pid.getSetpoint().position, TOLERANCE));
+        SmartDashboard.putNumber("pid", pid.calculate(getPosition()));
 
-        leader.set(MathUtil.clamp(pid.calculate(getPosition()), -1, 1) * SPEED);
+        leader.set(pid.calculate(getPosition()));
     }
 
     public ArmCommands getCommands() {
@@ -94,7 +96,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void set(double target) {
-        pid.reset(getPosition());
         pid.setGoal(target);
     }
 }
