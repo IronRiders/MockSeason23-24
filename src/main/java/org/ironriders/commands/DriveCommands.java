@@ -162,7 +162,7 @@ public class DriveCommands {
      * Generates a command to make the robot follow a pre-defined path with the option to preserve the velocity at the
      * end and the default settings of resetOdometry as false.
      *
-     * @param path              The pre-defined path that the robot should follow.
+     * @param path                The pre-defined path that the robot should follow.
      * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
      *                            If true, the path will end with the robot going the max velocity; if false, it will
      *                            stop abruptly.
@@ -176,12 +176,12 @@ public class DriveCommands {
      * Generates a command to make the robot follow a pre-defined path using a combination of pose planning and path
      * following.
      *
-     * @param path              The pre-defined path that the robot should follow.
+     * @param path                The pre-defined path that the robot should follow.
      * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
      *                            If true, the path will end with the robot going the max velocity; if false, it will
      *                            stop abruptly.
-     * @param resetOdometry     A boolean flag indicating whether to reset the robot's odometry to the starting pose of
-     *                          the path.
+     * @param resetOdometry       A boolean flag indicating whether to reset the robot's odometry to the starting pose of
+     *                            the path.
      * @return A Command object representing the sequence of actions to follow the specified path.
      */
     public Command followPath(Path path, boolean preserveEndVelocity, boolean resetOdometry) {
@@ -210,5 +210,13 @@ public class DriveCommands {
                 .runOnce(() -> vision.useVisionForPoseEstimation(true))
                 .andThen(command)
                 .andThen(Commands.runOnce(() -> vision.useVisionForPoseEstimation(false)));
+    }
+
+    public Command resetOdometry() {
+        return resetOdometry(new Pose2d());
+    }
+
+    public Command resetOdometry(Pose2d pose) {
+        return Commands.runOnce(() -> drive.getSwerveDrive().resetOdometry(pose), drive);
     }
 }

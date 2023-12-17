@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.commands.RobotCommands;
-import org.ironriders.constants.Manipulator;
 import org.ironriders.constants.Ports;
+import org.ironriders.lib.AutoConfig;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
 import org.ironriders.subsystems.DriveSubsystem;
@@ -40,32 +40,20 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-//        drive.setDefaultCommand(
-//                driveCommands.teleopCommand(
-//                        () -> -controlCurve(controller.getLeftY()),
-//                        () -> -controlCurve(controller.getLeftX()),
-//                        () -> -controlCurve(controller.getRightX())
-//                )
-//        );
-
-        controller.a().onTrue(
-                arm.getCommands().setPivot(0).andThen(
-                        manipulator.getCommands().set(Manipulator.State.GRAB)
-                ).andThen(manipulator.getCommands().waitThenStop(1))
-        );
-        controller.b().onTrue(
-                arm.getCommands().setPivot(0).andThen(
-                        manipulator.getCommands().set(Manipulator.State.EJECT)
+        drive.setDefaultCommand(
+                driveCommands.teleopCommand(
+                        () -> -controlCurve(controller.getLeftY()),
+                        () -> -controlCurve(controller.getLeftX()),
+                        () -> -controlCurve(controller.getRightX())
                 )
         );
-        controller.x().onTrue(
-                arm.getCommands().setPivot(30)
-        );
-        controller.y().onTrue(manipulator.getCommands().waitThenStop(1));
+
+        controller.a().onTrue(arm.getCommands().setPivot(50));
+        controller.b().onTrue(commands.groundPickup());
     }
 
     private double controlCurve(double input) {
-        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND);
+        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) * 0.3;
     }
 
     /**
@@ -74,6 +62,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return arm.getCommands().setPivot(70).andThen(arm.getCommands().setPivot(20));
+        return commands.buildAuto(AutoConfig.TEST);
     }
 }

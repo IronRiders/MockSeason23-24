@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.9946338569071984,
-      "y": 1.9434908619082094
+      "x": 2.5341228989324027,
+      "y": 4.291566581483294
     },
     "rotation": 0
   },
@@ -12,15 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Exchange Return"
+            "pathName": "TEST"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "Switch"
           }
         }
       ]

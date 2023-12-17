@@ -8,6 +8,7 @@ import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
 
 import static org.ironriders.constants.Arm.State.*;
+import static org.ironriders.constants.Arm.TIMEOUT;
 import static org.ironriders.constants.Arm.TOLERANCE;
 
 public class ArmCommands {
@@ -28,7 +29,8 @@ public class ArmCommands {
 
     public Command setPivot(double target) {
         return Commands
-                .runOnce(() -> arm.set(target))
-                .until(() -> Utils.isWithinTolerance(arm.getPosition(), target, TOLERANCE));
+                .run(() -> arm.set(target), arm)
+                .until(() -> Utils.isWithinTolerance(arm.getPosition(), target, TOLERANCE))
+                .withTimeout(TIMEOUT);
     }
 }

@@ -21,7 +21,7 @@ import static org.ironriders.constants.Robot.Wheels.DRIVE_CONVERSION_FACTOR;
 import static org.ironriders.constants.Robot.Wheels.STEERING_CONVERSION_FACTOR;
 
 public class DriveSubsystem extends SubsystemBase {
-    public final DriveCommands commands;
+    private final DriveCommands commands;
     private final VisionSubsystem vision = new VisionSubsystem();
     private final SwerveDrive swerveDrive;
 

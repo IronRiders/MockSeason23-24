@@ -5,11 +5,17 @@ import edu.wpi.first.math.util.Units;
 
 public class Auto {
     public static class Drive {
+        //        public static final PathConstraints CONSTRAINTS = new PathConstraints(
+//                2.7,
+//                2,
+//                Units.degreesToRadians(180),
+//                Units.degreesToRadians(90)
+//        );
         public static final PathConstraints CONSTRAINTS = new PathConstraints(
-                2.7,
-                2,
-                Units.degreesToRadians(360),
-                Units.degreesToRadians(180)
+                1,
+                1,
+                Units.degreesToRadians(45),
+                Units.degreesToRadians(22.5)
         );
     }
 }

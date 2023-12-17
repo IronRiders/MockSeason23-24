@@ -7,13 +7,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.ArmCommands;
 import org.ironriders.constants.Ports;
+import org.ironriders.lib.Utils;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMax.SoftLimitDirection.kForward;
 import static com.revrobotics.CANSparkMax.SoftLimitDirection.kReverse;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static org.ironriders.constants.Arm.*;
-import static org.ironriders.constants.Arm.PIDFF.*;
+import static org.ironriders.constants.Arm.PID.*;
 
 public class ArmSubsystem extends SubsystemBase {
     private final ArmCommands commands;
@@ -58,13 +59,13 @@ public class ArmSubsystem extends SubsystemBase {
         commands = new ArmCommands(this);
     }
 
-    /*
-    TODO: Test
-    See if we need break mode
-     */
-
     @Override
     public void periodic() {
+        if (!Utils.isWithinTolerance(getPrimaryPosition(), getSecondaryPosition(), FAILSAFE_DIFFERENCE)) {
+            leader.set(0);
+            return;
+        }
+
         SmartDashboard.putNumber("Left Encoder", getSecondaryPosition());
         SmartDashboard.putNumber("Left Encoder Int", follower.getEncoder().getPosition());
         SmartDashboard.putNumber("Right Int Encoder", leader.getEncoder().getPosition());

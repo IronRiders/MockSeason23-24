@@ -14,6 +14,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     private final CANSparkMax leader = new CANSparkMax(Ports.Manipulator.RIGHT_MOTOR, kBrushless);
     @SuppressWarnings("FieldCanBeLocal")
     private final CANSparkMax follower = new CANSparkMax(Ports.Manipulator.LEFT_MOTOR, kBrushless);
+
     public ManipulatorSubsystem() {
         leader.setSmartCurrentLimit(CURRENT_LIMIT);
         follower.setSmartCurrentLimit(CURRENT_LIMIT);

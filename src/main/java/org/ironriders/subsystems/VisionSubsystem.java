@@ -56,6 +56,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     public int bestTagFor(Game.Field.AprilTagLocation location) {
         setPipeline(APRIL_TAGS);
+
         if (!getResult().hasTargets()) {
             return 0;
         }
