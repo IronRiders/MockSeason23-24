@@ -5,8 +5,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.constants.Arm;
+import org.ironriders.constants.Auto;
 import org.ironriders.constants.Manipulator;
-import org.ironriders.lib.AutoConfig;
 import org.ironriders.subsystems.ArmSubsystem;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
@@ -79,7 +79,7 @@ public class RobotCommands {
     public Command switchDropOff() {
         return Commands.sequence(
                 arm.setPivot(Arm.State.SWITCH),
-                drive.pathFindToTag(1),
+                drive.pathFindToTag(vision.bestTagFor(AprilTagLocation.SWITCH)),
                 manipulator.set(Manipulator.State.EJECT)
         );
     }
@@ -90,11 +90,7 @@ public class RobotCommands {
      * @param auto The configuration object specifying the autonomous routine.
      * @return A command representing the autonomous routine specified by the {@code AutoConfig}.
      */
-    public Command buildAuto(AutoConfig auto) {
-        return buildAuto(auto, false);
-    }
-
-    public Command buildAuto(AutoConfig auto, boolean resetOdometry) {
+    public Command buildAuto(Auto.AutoOption auto) {
         return AutoBuilder.buildAuto(auto.name());
     }
 }

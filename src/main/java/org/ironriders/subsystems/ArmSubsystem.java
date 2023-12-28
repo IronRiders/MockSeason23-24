@@ -53,8 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
         follower.enableSoftLimit(kForward, true);
 
         follower.follow(leader, true);
-        pid.reset(getPosition());
-        pid.setGoal(getPosition());
+        resetPID();
 
         commands = new ArmCommands(this);
     }
@@ -98,5 +97,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void set(double target) {
         pid.setGoal(target);
+    }
+
+    public void resetPID() {
+        pid.reset(getPosition());
+        pid.setGoal(getPosition());
     }
 }

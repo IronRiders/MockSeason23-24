@@ -26,7 +26,7 @@ public class ManipulatorCommands {
             command = command.andThen(waitThenStop(EJECT_TIMEOUT));
         }
 
-        return command;
+        return command.finallyDo(() -> manipulator.set(STOP));
     }
 
     public Command grabAndStop(double duration) {
@@ -34,6 +34,8 @@ public class ManipulatorCommands {
     }
 
     public Command waitThenStop(double duration) {
-        return Commands.waitSeconds(duration).andThen(() -> manipulator.set(STOP), manipulator);
+        return Commands
+                .waitSeconds(duration)
+                .andThen(() -> manipulator.set(STOP), manipulator);
     }
 }

@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Game;
-import org.ironriders.lib.VisionPipeline;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -16,12 +15,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static org.ironriders.constants.Robot.LIMELIGHT_POSITION;
-import static org.ironriders.constants.Vision.APRIL_TAG_FIELD_LAYOUT_LOCATION;
-import static org.ironriders.lib.VisionPipeline.APRIL_TAGS;
+import static org.ironriders.constants.Vision.*;
+import static org.ironriders.constants.Vision.VisionPipeline.APRIL_TAGS;
 import static org.photonvision.PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY;
 
 public class VisionSubsystem extends SubsystemBase {
-    private final PhotonCamera camera = new PhotonCamera("LIMELIGHT");
+    private final PhotonCamera camera = new PhotonCamera(CAMERA);
     private final PhotonPoseEstimator estimator;
     private final AprilTagFieldLayout tagLayout;
     private boolean useVisionForEstimation = false;

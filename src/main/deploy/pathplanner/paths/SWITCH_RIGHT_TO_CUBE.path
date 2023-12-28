@@ -1,0 +1,80 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.438836761377344,
+        "y": 2.4756080700200767
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.592855550972877,
+        "y": 2.521101440435693
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 2.217046546729027,
+        "y": 3.961073239176875
+      },
+      "prevControl": {
+        "x": 2.1992756989104265,
+        "y": 3.088569038403147
+      },
+      "nextControl": null,
+      "isLocked": false
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Pivot Resting",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Resting"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ground Pickup",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Ground Pickup"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 90.0,
+    "maxAngularAcceleration": 45.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null
+}

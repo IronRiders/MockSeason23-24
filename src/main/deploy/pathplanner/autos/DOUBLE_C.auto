@@ -1,0 +1,36 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.816580491136869,
+      "y": 1.5847998959931895
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Switch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SWITCH_RIGHT_TO_CUBE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Switch"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null
+}

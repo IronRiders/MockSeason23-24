@@ -10,12 +10,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.commands.RobotCommands;
 import org.ironriders.constants.Ports;
-import org.ironriders.lib.AutoConfig;
+import org.ironriders.lib.EnumSendableChooser;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
 
+import static org.ironriders.constants.Auto.AutoOption;
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 
 /**
@@ -28,32 +29,45 @@ public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
     private final ManipulatorSubsystem manipulator = new ManipulatorSubsystem();
     private final ArmSubsystem arm = new ArmSubsystem();
-    private final CommandXboxController controller = new CommandXboxController(Ports.Controllers.CONTROLLER);
+    private final CommandXboxController primaryController =
+            new CommandXboxController(Ports.Controllers.PRIMARY_CONTROLLER);
+    private final CommandXboxController secondaryController =
+            new CommandXboxController(Ports.Controllers.SECONDARY_CONTROLLER);
     private final RobotCommands commands = new RobotCommands(arm, drive, manipulator);
     private final DriveCommands driveCommands = drive.getCommands();
+    EnumSendableChooser<AutoOption> autoOptionSelector = new
+            EnumSendableChooser<>(AutoOption.class, AutoOption.getDefault(), "Auto Options");
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
         configureBindings();
+        generateAutoOptions();
     }
 
     private void configureBindings() {
         drive.setDefaultCommand(
                 driveCommands.teleopCommand(
-                        () -> -controlCurve(controller.getLeftY()),
-                        () -> -controlCurve(controller.getLeftX()),
-                        () -> -controlCurve(controller.getRightX())
+                        () -> -controlCurve(primaryController.getLeftY()),
+                        () -> -controlCurve(primaryController.getLeftX()),
+                        () -> -controlCurve(primaryController.getRightX())
                 )
         );
 
-        controller.a().onTrue(arm.getCommands().setPivot(50));
-        controller.b().onTrue(commands.groundPickup());
+        primaryController.a().onTrue(commands.groundPickup());
+        primaryController.b().onTrue(commands.switchDropOff());
+        primaryController.x().onTrue(commands.portal());
+        primaryController.y().onTrue(commands.exchange());
     }
 
     private double controlCurve(double input) {
-        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) * 0.3;
+        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) *
+                Math.max(primaryController.getLeftTriggerAxis(), primaryController.getRightTriggerAxis());
+    }
+
+    private void generateAutoOptions() {
+        //SmartDashboard.putData(autoOptionSelector);
     }
 
     /**
@@ -62,6 +76,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return commands.buildAuto(AutoConfig.TEST);
+        return commands.buildAuto(autoOptionSelector.getSelected());
     }
 }

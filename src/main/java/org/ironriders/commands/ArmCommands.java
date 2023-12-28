@@ -31,6 +31,7 @@ public class ArmCommands {
         return Commands
                 .run(() -> arm.set(target), arm)
                 .until(() -> Utils.isWithinTolerance(arm.getPosition(), target, TOLERANCE))
+                .finallyDo(arm::resetPID)
                 .withTimeout(TIMEOUT);
     }
 }
