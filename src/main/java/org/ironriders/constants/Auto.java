@@ -13,6 +13,11 @@ public class Auto {
         }
     }
 
+    public enum Path {
+        TEST
+    }
+
+
     public static class Drive {
         public static final PathConstraints CONSTRAINTS = new PathConstraints(
                 2.5,

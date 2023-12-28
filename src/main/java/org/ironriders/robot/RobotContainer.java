@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.commands.RobotCommands;
 import org.ironriders.constants.Ports;
+import org.ironriders.constants.Teleop;
 import org.ironriders.lib.EnumSendableChooser;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
@@ -18,6 +19,7 @@ import org.ironriders.subsystems.ManipulatorSubsystem;
 
 import static org.ironriders.constants.Auto.AutoOption;
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
+import static org.ironriders.constants.Teleop.Speed.MIN_MULTIPLIER;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,7 +45,6 @@ public class RobotContainer {
      */
     public RobotContainer() {
         configureBindings();
-        generateAutoOptions();
     }
 
     private void configureBindings() {
@@ -63,11 +64,11 @@ public class RobotContainer {
 
     private double controlCurve(double input) {
         return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) *
-                Math.max(primaryController.getLeftTriggerAxis(), primaryController.getRightTriggerAxis());
-    }
-
-    private void generateAutoOptions() {
-        //SmartDashboard.putData(autoOptionSelector);
+                (Utils.controlCurve(
+                        Math.max(primaryController.getLeftTriggerAxis(), primaryController.getRightTriggerAxis()),
+                        Teleop.Speed.EXPONENT,
+                        0
+                ) * (1 - MIN_MULTIPLIER) + MIN_MULTIPLIER);
     }
 
     /**

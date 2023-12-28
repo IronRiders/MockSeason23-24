@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.constants.Arm;
-import org.ironriders.lib.Path;
+import org.ironriders.constants.Auto.Path;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
