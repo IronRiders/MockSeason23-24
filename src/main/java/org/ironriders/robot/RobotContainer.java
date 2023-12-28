@@ -63,12 +63,14 @@ public class RobotContainer {
     }
 
     private double controlCurve(double input) {
-        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) *
-                (Utils.controlCurve(
+        // Multiplier based on trigger axis (whichever one is larger) then scaled to start at 0.35
+        return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) * (
+                Utils.controlCurve(
                         Math.max(primaryController.getLeftTriggerAxis(), primaryController.getRightTriggerAxis()),
                         Teleop.Speed.EXPONENT,
                         0
-                ) * (1 - MIN_MULTIPLIER) + MIN_MULTIPLIER);
+                ) * (1 - MIN_MULTIPLIER) + MIN_MULTIPLIER
+        );
     }
 
     /**
