@@ -3,6 +3,7 @@ package org.ironriders.subsystems;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.constants.Game;
 import org.photonvision.EstimatedRobotPose;
@@ -39,6 +40,11 @@ public class VisionSubsystem extends SubsystemBase {
         setPipeline(APRIL_TAGS);
         camera.setLED(VisionLEDMode.kOff);
         camera.setDriverMode(false);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putString("vision/pipeline", getPipeline().name());
     }
 
     public AprilTagFieldLayout getTagLayout() {

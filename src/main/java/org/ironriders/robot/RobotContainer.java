@@ -5,19 +5,21 @@
 
 package org.ironriders.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.commands.RobotCommands;
 import org.ironriders.constants.Ports;
 import org.ironriders.constants.Teleop;
-import org.ironriders.lib.EnumSendableChooser;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
 
-import static org.ironriders.constants.Auto.AutoOption;
+import static org.ironriders.constants.Auto.DEFAULT_AUTO;
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 import static org.ironriders.constants.Teleop.Speed.MIN_MULTIPLIER;
 
@@ -37,13 +39,19 @@ public class RobotContainer {
             new CommandXboxController(Ports.Controllers.SECONDARY_CONTROLLER);
     private final RobotCommands commands = new RobotCommands(arm, drive, manipulator);
     private final DriveCommands driveCommands = drive.getCommands();
-    EnumSendableChooser<AutoOption> autoOptionSelector = new
-            EnumSendableChooser<>(AutoOption.class, AutoOption.getDefault(), "Auto Options");
+    private final SendableChooser<String> autoOptionSelector = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
+        for (String auto : AutoBuilder.getAllAutoNames()) {
+            if (auto.equals("REGISTERED_COMMANDS")) continue;
+            autoOptionSelector.addOption(auto, auto);
+        }
+        autoOptionSelector.setDefaultOption(DEFAULT_AUTO, DEFAULT_AUTO);
+        SmartDashboard.putData("auto/Auto Option", autoOptionSelector);
+
         configureBindings();
     }
 
@@ -64,6 +72,7 @@ public class RobotContainer {
 
     private double controlCurve(double input) {
         // Multiplier based on trigger axis (whichever one is larger) then scaled to start at 0.35
+        // TODO: Test this
         return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) * (
                 Utils.controlCurve(
                         Math.max(primaryController.getLeftTriggerAxis(), primaryController.getRightTriggerAxis()),

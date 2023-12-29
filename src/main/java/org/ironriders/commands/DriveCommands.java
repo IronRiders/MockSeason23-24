@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import static org.ironriders.constants.Auto.Drive.CONSTRAINTS;
 import static org.ironriders.constants.Drive.MAX_SPEED;
 
 public class DriveCommands {
@@ -59,7 +58,7 @@ public class DriveCommands {
      * @return A command to set the gyro orientation.
      */
     public Command setGyro(Pose2d rotation) {
-        return Commands.runOnce(() -> swerve.resetOdometry(rotation), drive);
+        return drive.runOnce(() -> swerve.resetOdometry(rotation));
     }
 
     /**
@@ -82,15 +81,12 @@ public class DriveCommands {
      * @return A command to drive the swerve robot with the specified speeds and control options.
      */
     public Command drive(Supplier<ChassisSpeeds> speeds, boolean fieldCentric, boolean openLoop) {
-        return Commands.runOnce(
-                () -> swerve.drive(
-                        SwerveController.getTranslation2d(speeds.get()),
-                        speeds.get().omegaRadiansPerSecond,
-                        fieldCentric,
-                        openLoop
-                ),
-                drive
-        );
+        return drive.runOnce(() -> swerve.drive(
+                SwerveController.getTranslation2d(speeds.get()),
+                speeds.get().omegaRadiansPerSecond,
+                fieldCentric,
+                openLoop
+        ));
     }
 
     /**
@@ -116,8 +112,8 @@ public class DriveCommands {
     public Command pathFindTo(Pose2d target, boolean preserveEndVelocity) {
         return AutoBuilder.pathfindToPose(
                 target,
-                CONSTRAINTS,
-                preserveEndVelocity ? CONSTRAINTS.getMaxVelocityMps() : 0
+                drive.getPathfindingConstraint().getConstraints(),
+                preserveEndVelocity ? drive.getPathfindingConstraint().getConstraints().getMaxVelocityMps() : 0
         ).withTimeout(10);
     }
 
@@ -206,10 +202,10 @@ public class DriveCommands {
      * @return A new Command object representing the sequence of actions including vision-based pose estimation.
      */
     public Command useVisionForPoseEstimation(Command command) {
-        return Commands
+        return vision
                 .runOnce(() -> vision.useVisionForPoseEstimation(true))
                 .andThen(command)
-                .andThen(Commands.runOnce(() -> vision.useVisionForPoseEstimation(false)));
+                .andThen(vision.runOnce(() -> vision.useVisionForPoseEstimation(false)));
     }
 
     public Command resetOdometry() {
@@ -217,6 +213,6 @@ public class DriveCommands {
     }
 
     public Command resetOdometry(Pose2d pose) {
-        return Commands.runOnce(() -> drive.getSwerveDrive().resetOdometry(pose), drive);
+        return drive.runOnce(() -> drive.getSwerveDrive().resetOdometry(pose));
     }
 }

@@ -21,7 +21,7 @@ public class ManipulatorCommands {
     }
 
     public Command set(Manipulator.State state) {
-        Command command = Commands.runOnce(() -> manipulator.set(state), manipulator);
+        Command command = manipulator.runOnce(() -> manipulator.set(state));
         if (state.equals(EJECT)) {
             command = command.andThen(waitThenStop(EJECT_TIMEOUT));
         }

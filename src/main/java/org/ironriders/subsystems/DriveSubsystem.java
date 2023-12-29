@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Drive;
+import org.ironriders.lib.EnumSendableChooser;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -15,6 +16,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import java.io.File;
 import java.io.IOException;
 
+import static org.ironriders.constants.Auto.PathfindingConstraintProfile;
 import static org.ironriders.constants.Drive.MAX_SPEED;
 import static org.ironriders.constants.Robot.Dimensions;
 import static org.ironriders.constants.Robot.Wheels.DRIVE_CONVERSION_FACTOR;
@@ -24,6 +26,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final DriveCommands commands;
     private final VisionSubsystem vision = new VisionSubsystem();
     private final SwerveDrive swerveDrive;
+    private final EnumSendableChooser<PathfindingConstraintProfile> constraintProfile = new EnumSendableChooser<>(
+            PathfindingConstraintProfile.class,
+            PathfindingConstraintProfile.getDefault(),
+            "auto/Pathfinding Constraint Profile"
+    );
 
     public DriveSubsystem() {
         try {
@@ -75,6 +82,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     public VisionSubsystem getVision() {
         return vision;
+    }
+
+    public PathfindingConstraintProfile getPathfindingConstraint() {
+        return constraintProfile.getSelected();
     }
 
     public SwerveDrive getSwerveDrive() {

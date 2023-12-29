@@ -7,10 +7,10 @@ public class EnumSendableChooser<E extends Enum<?>> extends SendableChooser<E> {
     public EnumSendableChooser(Class<E> enumType, E defaultOption, String name) {
         E[] options = enumType.getEnumConstants();
 
-        setDefaultOption(defaultOption.name(), defaultOption);
         for (E option : options) {
             addOption(option.name(), option);
         }
+        setDefaultOption(defaultOption.name(), defaultOption);
 
         SmartDashboard.putData(name, this);
     }

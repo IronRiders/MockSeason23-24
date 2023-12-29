@@ -2,7 +2,6 @@ package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.constants.Arm;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
@@ -28,8 +27,8 @@ public class ArmCommands {
     }
 
     public Command setPivot(double target) {
-        return Commands
-                .run(() -> arm.set(target), arm)
+        return arm
+                .run(() -> arm.set(target))
                 .until(() -> Utils.isWithinTolerance(arm.getPosition(), target, TOLERANCE))
                 .finallyDo(arm::resetPID)
                 .withTimeout(TIMEOUT);

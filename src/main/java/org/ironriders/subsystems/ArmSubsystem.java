@@ -55,23 +55,22 @@ public class ArmSubsystem extends SubsystemBase {
         follower.follow(leader, true);
         resetPID();
 
+        SmartDashboard.putData("arm/Arm PID", pid);
+        SmartDashboard.putData("arm/Leader", primaryEncoder);
+        SmartDashboard.putData("arm/Follower", secondaryEncoder);
+
         commands = new ArmCommands(this);
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("arm/Leader (integrated)", leader.getEncoder().getPosition());
+        SmartDashboard.putNumber("arm/Follower (integrated)", follower.getEncoder().getPosition());
+
         if (!Utils.isWithinTolerance(getPrimaryPosition(), getSecondaryPosition(), FAILSAFE_DIFFERENCE)) {
             leader.set(0);
             return;
         }
-
-        SmartDashboard.putNumber("Left Encoder", getSecondaryPosition());
-        SmartDashboard.putNumber("Left Encoder Int", follower.getEncoder().getPosition());
-        SmartDashboard.putNumber("Right Int Encoder", leader.getEncoder().getPosition());
-        SmartDashboard.putNumber("Right Encoder", getPrimaryPosition());
-        SmartDashboard.putNumber("Target", pid.getSetpoint().position);
-
-        SmartDashboard.putNumber("pid", pid.calculate(getPosition()));
 
         leader.set(pid.calculate(getPosition()));
     }

@@ -1,6 +1,7 @@
 package org.ironriders.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.ManipulatorCommands;
 import org.ironriders.constants.Ports;
@@ -23,6 +24,8 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         follower.follow(leader, true);
 
+        SmartDashboard.putString("manipulator/State", "STOP");
+
         commands = new ManipulatorCommands(this);
     }
 
@@ -39,14 +42,17 @@ public class ManipulatorSubsystem extends SubsystemBase {
     }
 
     private void grab() {
+        SmartDashboard.putString("manipulator/State", "GRAB");
         leader.set(-GRAB_SPEED);
     }
 
     private void eject() {
+        SmartDashboard.putString("manipulator/State", "EJECT");
         leader.set(EJECT_SPEED);
     }
 
     private void stop() {
+        SmartDashboard.putString("manipulator/State", "STOP");
         leader.set(0);
     }
 }
