@@ -37,7 +37,7 @@
               "_showGlyph": false
             }
           },
-          "5,0": {
+          "3,2": {
             "size": [
               4,
               2
@@ -51,17 +51,18 @@
               "Game/Game": "A2018_Power_Up",
               "Visuals/Robot Icon Size": 0.1,
               "Visuals/Show Outside Circles": true,
-              "Colors/XModules": "#FFFFFFFF"
+              "Colors/XModules": "#FFFFFFFF",
+              "Colors/Trajectory": "#FF0000FF"
             }
           },
-          "9,0": {
+          "5,0": {
             "size": [
               2,
               2
             ],
             "content": {
               "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Pigeon 2 [9]",
+              "_source0": "network_table:///SmartDashboard/swerve/robotRotation",
               "_title": "Gyro",
               "_glyph": 148,
               "_showGlyph": false,

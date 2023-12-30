@@ -2,8 +2,11 @@ package org.ironriders.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.DriveCommands;
@@ -15,6 +18,8 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.ironriders.constants.Auto.PathfindingConstraintProfile;
 import static org.ironriders.constants.Drive.MAX_SPEED;
@@ -61,6 +66,17 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        PathPlannerLogging.setLogActivePathCallback((poses) -> {
+            List<Trajectory.State> states = new ArrayList<>();
+            for (Pose2d pose : poses) {
+                Trajectory.State state = new Trajectory.State();
+                state.poseMeters = pose;
+                states.add(state);
+            }
+
+            swerveDrive.postTrajectory(new Trajectory(states));
+        });
+
         getVision().getPoseEstimate().ifPresent(estimatedRobotPose -> {
             swerveDrive.resetOdometry(estimatedRobotPose.estimatedPose.toPose2d());
             swerveDrive.setGyro(estimatedRobotPose.estimatedPose.getRotation());

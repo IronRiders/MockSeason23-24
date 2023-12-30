@@ -40,10 +40,7 @@ public class VisionSubsystem extends SubsystemBase {
         setPipeline(APRIL_TAGS);
         camera.setLED(VisionLEDMode.kOff);
         camera.setDriverMode(false);
-    }
 
-    @Override
-    public void periodic() {
         SmartDashboard.putString("vision/pipeline", getPipeline().name());
     }
 
@@ -90,5 +87,6 @@ public class VisionSubsystem extends SubsystemBase {
 
     public void setPipeline(VisionPipeline pipeline) {
         camera.setPipelineIndex(pipeline.getIndex());
+        SmartDashboard.putString("vision/pipeline", pipeline.name());
     }
 }
