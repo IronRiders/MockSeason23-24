@@ -2,6 +2,7 @@ package org.ironriders.constants;
 
 public class Vision {
     public static final String CAMERA = "LIMELIGHT";
+    public static final String APRIL_TAG_FIELD_LAYOUT_LOCATION = "/apriltags/2018-powerup.json";
 
     public enum VisionPipeline {
         APRIL_TAGS(0),
@@ -26,6 +27,4 @@ public class Vision {
             return index;
         }
     }
-
-    public static final String APRIL_TAG_FIELD_LAYOUT_LOCATION = "/apriltags/2018-powerup.json";
 }
