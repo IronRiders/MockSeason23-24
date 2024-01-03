@@ -12,6 +12,7 @@ import org.ironriders.subsystems.ManipulatorSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
 
 import static org.ironriders.constants.Game.Field.AprilTagLocation;
+import static org.ironriders.constants.Vision.WAIT_TIME;
 
 public class RobotCommands {
     private final ArmCommands arm;
@@ -47,14 +48,13 @@ public class RobotCommands {
     }
 
     public Command groundPickup() {
-        return driving()
-                .andThen(manipulator.grabAndStop(3));
+        return resting().andThen(manipulator.grabAndStop(3));
     }
 
     public Command exchange() {
         return Commands.sequence(
                 arm.setPivot(Arm.State.EXCHANGE),
-                drive.pathFindToTag(vision.bestTagFor(AprilTagLocation.EXCHANGE)),
+                driveTo(AprilTagLocation.EXCHANGE),
                 manipulator.set(Manipulator.State.EJECT)
         );
     }
@@ -62,25 +62,32 @@ public class RobotCommands {
     public Command exchangeReturn() {
         return Commands.sequence(
                 arm.setPivot(Arm.State.EXCHANGE),
-                drive.pathFindToTag(vision.bestTagFor(AprilTagLocation.EXCHANGE)),
-                manipulator.set(Manipulator.State.GRAB)
+                driveTo(AprilTagLocation.EXCHANGE),
+                manipulator.grabAndStop(3)
         );
     }
 
     public Command portal() {
         return Commands.sequence(
                 arm.setPivot(Arm.State.PORTAL),
-                drive.pathFindToTag(vision.bestTagFor(AprilTagLocation.PORTAL)),
-                manipulator.set(Manipulator.State.GRAB)
+                driveTo(AprilTagLocation.PORTAL),
+                manipulator.grabAndStop(3)
         );
     }
 
     public Command switchDropOff() {
         return Commands.sequence(
+                arm.setPivot(Arm.State.REST),
+                driveTo(AprilTagLocation.SWITCH),
                 arm.setPivot(Arm.State.SWITCH),
-                drive.pathFindToTag(vision.bestTagFor(AprilTagLocation.SWITCH)),
                 manipulator.set(Manipulator.State.EJECT)
         );
+    }
+
+    private Command driveTo(AprilTagLocation location) {
+        return Commands
+                .waitSeconds(WAIT_TIME)
+                .andThen(drive.pathFindToTag(() -> vision.bestTagFor(location)));
     }
 
     /**

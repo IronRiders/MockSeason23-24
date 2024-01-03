@@ -58,12 +58,16 @@ public class VisionSubsystem extends SubsystemBase {
 
     public int bestTagFor(Game.Field.AprilTagLocation location) {
         setPipeline(APRIL_TAGS);
+        SmartDashboard.putBoolean("not found", false);
+        SmartDashboard.putBoolean("not correct", false);
 
         if (!getResult().hasTargets()) {
-            return 0;
+            SmartDashboard.putBoolean("not found", true);
+            return -1;
         }
         if (!location.has(getResult().getBestTarget().getFiducialId())) {
-            return 0;
+            SmartDashboard.putBoolean("not correct", true);
+            return -1;
         }
 
         return getResult().getBestTarget().getFiducialId();

@@ -9,6 +9,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.commands.RobotCommands;
@@ -21,6 +22,7 @@ import org.ironriders.subsystems.ManipulatorSubsystem;
 
 import static org.ironriders.constants.Auto.DEFAULT_AUTO;
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
+import static org.ironriders.constants.Teleop.Speed.DEADBAND;
 import static org.ironriders.constants.Teleop.Speed.MIN_MULTIPLIER;
 
 /**
@@ -35,8 +37,8 @@ public class RobotContainer {
     private final ArmSubsystem arm = new ArmSubsystem();
     private final CommandXboxController primaryController =
             new CommandXboxController(Ports.Controllers.PRIMARY_CONTROLLER);
-    private final CommandXboxController secondaryController =
-            new CommandXboxController(Ports.Controllers.SECONDARY_CONTROLLER);
+    private final CommandJoystick secondaryController =
+            new CommandJoystick(Ports.Controllers.SECONDARY_CONTROLLER);
     private final RobotCommands commands = new RobotCommands(arm, drive, manipulator);
     private final DriveCommands driveCommands = drive.getCommands();
     private final SendableChooser<String> autoOptionSelector = new SendableChooser<>();
@@ -56,6 +58,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        // Primary Driver
         drive.setDefaultCommand(
                 driveCommands.teleopCommand(
                         () -> -controlCurve(primaryController.getLeftY()),
@@ -68,16 +71,27 @@ public class RobotContainer {
         primaryController.b().onTrue(commands.switchDropOff());
         primaryController.x().onTrue(commands.portal());
         primaryController.y().onTrue(commands.exchange());
+
+        primaryController.leftStick().onTrue(commands.driving());
+        primaryController.rightStick().onTrue(commands.driving());
+
+        // Secondary Driver
+        secondaryController.button(6).onTrue(commands.exchange());
+        secondaryController.button(7).onTrue(commands.exchangeReturn());
+        secondaryController.button(8).onTrue(commands.portal());
+        secondaryController.button(9).onTrue(commands.switchDropOff());
+        secondaryController.button(10).onTrue(commands.groundPickup());
+        secondaryController.button(11).onTrue(commands.resting());
+        secondaryController.button(12).onTrue(commands.driving());
     }
 
     private double controlCurve(double input) {
         // Multiplier based on trigger axis (whichever one is larger) then scaled to start at 0.35
-        // TODO: Test this
         return Utils.controlCurve(input, Joystick.EXPONENT, Joystick.DEADBAND) * (
                 Utils.controlCurve(
                         Math.max(primaryController.getLeftTriggerAxis(), primaryController.getRightTriggerAxis()),
                         Teleop.Speed.EXPONENT,
-                        0
+                        DEADBAND
                 ) * (1 - MIN_MULTIPLIER) + MIN_MULTIPLIER
         );
     }

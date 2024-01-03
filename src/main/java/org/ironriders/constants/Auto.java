@@ -37,7 +37,7 @@ public class Auto {
         }
 
         public static PathfindingConstraintProfile getDefault() {
-            return MEDIUM;
+            return SLOW;
         }
 
         public PathConstraints getConstraints() {

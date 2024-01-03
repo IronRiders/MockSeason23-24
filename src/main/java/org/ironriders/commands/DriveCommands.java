@@ -117,7 +117,7 @@ public class DriveCommands {
         ).withTimeout(10);
     }
 
-    public Command pathFindToTag(int id) {
+    public Command pathFindToTag(Supplier<Integer> id) {
         return pathFindToTag(id, -Arm.LENGTH_FROM_ORIGIN);
     }
 
@@ -129,8 +129,8 @@ public class DriveCommands {
      * @param offset The transformation to be applied to the identified target's pose.
      * @return A Command object representing the generated path to the identified target.
      */
-    public Command pathFindToTag(int id, double offset) {
-        Optional<Pose3d> pose = vision.getTag(id);
+    public Command pathFindToTag(Supplier<Integer> id, double offset) {
+        Optional<Pose3d> pose = vision.getTag(id.get());
         if (pose.isEmpty()) {
             return Commands.none();
         }
@@ -205,7 +205,7 @@ public class DriveCommands {
         return vision
                 .runOnce(() -> vision.useVisionForPoseEstimation(true))
                 .andThen(command)
-                .andThen(vision.runOnce(() -> vision.useVisionForPoseEstimation(false)));
+                .finallyDo(() -> vision.useVisionForPoseEstimation(false));
     }
 
     public Command resetOdometry() {
