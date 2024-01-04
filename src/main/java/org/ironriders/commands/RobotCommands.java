@@ -53,8 +53,8 @@ public class RobotCommands {
 
     public Command exchange() {
         return Commands.sequence(
-                arm.setPivot(Arm.State.EXCHANGE),
                 driveTo(AprilTagLocation.EXCHANGE),
+                arm.setPivot(Arm.State.EXCHANGE),
                 manipulator.set(Manipulator.State.EJECT)
         );
     }
@@ -69,15 +69,14 @@ public class RobotCommands {
 
     public Command portal() {
         return Commands.sequence(
-                arm.setPivot(Arm.State.PORTAL),
                 driveTo(AprilTagLocation.PORTAL),
+                arm.setPivot(Arm.State.PORTAL),
                 manipulator.grabAndStop(3)
         );
     }
 
     public Command switchDropOff() {
         return Commands.sequence(
-                arm.setPivot(Arm.State.REST),
                 driveTo(AprilTagLocation.SWITCH),
                 arm.setPivot(Arm.State.SWITCH),
                 manipulator.set(Manipulator.State.EJECT)
@@ -85,9 +84,11 @@ public class RobotCommands {
     }
 
     private Command driveTo(AprilTagLocation location) {
-        return Commands
-                .waitSeconds(WAIT_TIME)
-                .andThen(drive.pathFindToTag(() -> vision.bestTagFor(location)));
+        return Commands.sequence(
+                arm.setPivot(Arm.State.REST),
+                Commands.waitSeconds(WAIT_TIME),
+                Commands.run(() -> drive.pathFindToTag(vision.bestTagFor(location)))
+        );
     }
 
     /**

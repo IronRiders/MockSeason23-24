@@ -4,8 +4,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public class Arm {
-    public static final double LENGTH_FROM_ORIGIN = Units.inchesToMeters(33);
-    public static final double TOLERANCE = 0.3;
+    public static final double LENGTH_FROM_ORIGIN = Units.inchesToMeters(39);
+    public static final double TOLERANCE = 1;
     public static final double FAILSAFE_DIFFERENCE = 7;
     public static final double GEARING = 500;
     public static final double PRIMARY_ENCODER_OFFSET = -124;
@@ -15,7 +15,7 @@ public class Arm {
 
     public enum State {
         REST(0),
-        SWITCH(30),
+        SWITCH(40),
         EXCHANGE(0),
         EXCHANGE_RETURN(30),
         PORTAL(30),
@@ -44,6 +44,6 @@ public class Arm {
         public static final double D = 0;
 
         public static final TrapezoidProfile.Constraints PROFILE =
-                new TrapezoidProfile.Constraints(30, 25);
+                new TrapezoidProfile.Constraints(60, 30);
     }
 }

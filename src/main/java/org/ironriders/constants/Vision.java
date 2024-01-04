@@ -3,7 +3,7 @@ package org.ironriders.constants;
 public class Vision {
     public static final String CAMERA = "LIMELIGHT";
     public static final String APRIL_TAG_FIELD_LAYOUT_LOCATION = "/apriltags/2018-powerup.json";
-    public static final double WAIT_TIME = 1;
+    public static final double WAIT_TIME = 0.6;
 
     public enum VisionPipeline {
         APRIL_TAGS(0),

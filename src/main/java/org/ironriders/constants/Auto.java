@@ -12,19 +12,19 @@ public class Auto {
 
     public enum PathfindingConstraintProfile {
         SLOW(new PathConstraints(
-                1,
+                0.7,
                 0.5,
                 Units.degreesToRadians(360),
                 Units.degreesToRadians(180)
         )),
         MEDIUM(new PathConstraints(
-                2.5,
                 2,
+                1.5,
                 Units.degreesToRadians(360),
                 Units.degreesToRadians(180)
         )),
         FAST(new PathConstraints(
-                3,
+                2.5,
                 2,
                 Units.degreesToRadians(360),
                 Units.degreesToRadians(180)
