@@ -87,7 +87,7 @@ public class RobotCommands {
         return Commands.sequence(
                 arm.setPivot(Arm.State.REST),
                 Commands.waitSeconds(WAIT_TIME),
-                Commands.run(() -> drive.pathFindToTag(vision.bestTagFor(location)))
+                drive.pathFindToTag(vision.bestTagFor(location))
         );
     }
 

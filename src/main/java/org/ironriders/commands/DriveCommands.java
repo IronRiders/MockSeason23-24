@@ -15,6 +15,7 @@ import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -110,11 +111,11 @@ public class DriveCommands {
      * @return A Command object representing the generated path to the destination.
      */
     public Command pathFindTo(Pose2d target, boolean preserveEndVelocity) {
-        return AutoBuilder.pathfindToPose(
+        return Commands.defer(() -> AutoBuilder.pathfindToPose(
                 target,
                 drive.getPathfindingConstraint().getConstraints(),
                 preserveEndVelocity ? drive.getPathfindingConstraint().getConstraints().getMaxVelocityMps() : 0
-        ).withTimeout(10);
+        ).withTimeout(10), Set.of(drive));
     }
 
     public Command pathFindToTag(int id) {
