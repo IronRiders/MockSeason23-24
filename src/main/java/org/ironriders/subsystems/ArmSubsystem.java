@@ -75,6 +75,7 @@ public class ArmSubsystem extends SubsystemBase {
         leader.set(pid.calculate(getPosition()));
     }
 
+
     public ArmCommands getCommands() {
         return commands;
     }

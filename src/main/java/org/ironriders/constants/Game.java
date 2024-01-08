@@ -18,7 +18,7 @@ public class Game {
         public enum AprilTagLocation {
             EXCHANGE(1, 2),
             PORTAL(3, 4, 5, 6),
-            SWITCH(10, 7, 8, 9, 11, 12, 13, 14);
+            SWITCH(7, 8, 9, 10, 11, 12, 13, 14);
 
             final int[] ids;
 

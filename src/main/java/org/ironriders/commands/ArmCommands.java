@@ -33,4 +33,8 @@ public class ArmCommands {
                 .finallyDo(arm::resetPID)
                 .withTimeout(TIMEOUT);
     }
+
+    public Command reset() {
+        return arm.runOnce(arm::resetPID);
+    }
 }

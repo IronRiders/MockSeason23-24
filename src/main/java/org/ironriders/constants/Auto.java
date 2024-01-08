@@ -6,13 +6,9 @@ import edu.wpi.first.math.util.Units;
 public class Auto {
     public static final String DEFAULT_AUTO = "TEST";
 
-    public enum Path {
-        TEST
-    }
-
     public enum PathfindingConstraintProfile {
         SLOW(new PathConstraints(
-                0.7,
+                1,
                 0.5,
                 Units.degreesToRadians(360),
                 Units.degreesToRadians(180)

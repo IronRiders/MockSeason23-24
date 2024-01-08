@@ -6,7 +6,7 @@ public class Ports {
      */
     public static class Controllers {
         public static final int PRIMARY_CONTROLLER = 0;
-        public static final int SECONDARY_CONTROLLER = 0;
+        public static final int SECONDARY_CONTROLLER = 1;
     }
 
     /**

@@ -11,18 +11,22 @@ import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
 
+import java.util.Set;
+
 import static org.ironriders.constants.Game.Field.AprilTagLocation;
 import static org.ironriders.constants.Vision.WAIT_TIME;
 
 public class RobotCommands {
     private final ArmCommands arm;
     private final DriveCommands drive;
+    private final DriveSubsystem driveSubsystem;
     private final VisionSubsystem vision;
     private final ManipulatorCommands manipulator;
 
     public RobotCommands(ArmSubsystem arm, DriveSubsystem drive, ManipulatorSubsystem manipulator) {
         this.arm = arm.getCommands();
         this.drive = drive.getCommands();
+        driveSubsystem = drive;
         vision = drive.getVision();
         this.manipulator = manipulator.getCommands();
 
@@ -85,9 +89,11 @@ public class RobotCommands {
 
     private Command driveTo(AprilTagLocation location) {
         return Commands.sequence(
+                drive.lockPose(),
                 arm.setPivot(Arm.State.REST),
                 Commands.waitSeconds(WAIT_TIME),
-                drive.pathFindToTag(vision.bestTagFor(location))
+                Commands.defer(() -> drive.pathFindToTag(() -> vision.bestTagFor(location)), Set.of(driveSubsystem)),
+                drive.lockPose()
         );
     }
 

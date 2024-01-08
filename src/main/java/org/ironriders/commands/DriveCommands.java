@@ -1,13 +1,11 @@
 package org.ironriders.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironriders.constants.Arm;
-import org.ironriders.constants.Auto.Path;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.VisionSubsystem;
@@ -15,7 +13,6 @@ import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -111,14 +108,14 @@ public class DriveCommands {
      * @return A Command object representing the generated path to the destination.
      */
     public Command pathFindTo(Pose2d target, boolean preserveEndVelocity) {
-        return Commands.defer(() -> AutoBuilder.pathfindToPose(
+        return AutoBuilder.pathfindToPose(
                 target,
                 drive.getPathfindingConstraint().getConstraints(),
                 preserveEndVelocity ? drive.getPathfindingConstraint().getConstraints().getMaxVelocityMps() : 0
-        ).withTimeout(10), Set.of(drive));
+        ).withTimeout(10);
     }
 
-    public Command pathFindToTag(int id) {
+    public Command pathFindToTag(Supplier<Integer> id) {
         return pathFindToTag(id, -Arm.LENGTH_FROM_ORIGIN);
     }
 
@@ -130,8 +127,8 @@ public class DriveCommands {
      * @param offset The transformation to be applied to the identified target's pose.
      * @return A Command object representing the generated path to the identified target.
      */
-    public Command pathFindToTag(int id, double offset) {
-        Optional<Pose3d> pose = vision.getTag(id);
+    public Command pathFindToTag(Supplier<Integer> id, double offset) {
+        Optional<Pose3d> pose = vision.getTag(id.get());
         if (pose.isEmpty()) {
             return Commands.none();
         }
@@ -143,56 +140,8 @@ public class DriveCommands {
         );
     }
 
-    /**
-     * Generates a command to make the robot follow a pre-defined path with the default settings of preserveEndVelocity
-     * false and resetOdometry false.
-     * The default settings include preserving the robot's end velocity and not resetting odometry.
-     *
-     * @param path The pre-defined path that the robot should follow.
-     * @return A Command object representing the sequence of actions to follow the specified path with default settings.
-     */
-    public Command followPath(Path path) {
-        return followPath(path, false, false);
-    }
-
-    /**
-     * Generates a command to make the robot follow a pre-defined path with the option to preserve the velocity at the
-     * end and the default settings of resetOdometry as false.
-     *
-     * @param path                The pre-defined path that the robot should follow.
-     * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
-     *                            If true, the path will end with the robot going the max velocity; if false, it will
-     *                            stop abruptly.
-     * @return A Command object representing the sequence of actions to follow the specified path.
-     */
-    public Command followPath(Path path, boolean preserveEndVelocity) {
-        return followPath(path, preserveEndVelocity, false);
-    }
-
-    /**
-     * Generates a command to make the robot follow a pre-defined path using a combination of pose planning and path
-     * following.
-     *
-     * @param path                The pre-defined path that the robot should follow.
-     * @param preserveEndVelocity A boolean flag indicating whether to preserve velocity at the end of the path.
-     *                            If true, the path will end with the robot going the max velocity; if false, it will
-     *                            stop abruptly.
-     * @param resetOdometry       A boolean flag indicating whether to reset the robot's odometry to the starting pose of
-     *                            the path.
-     * @return A Command object representing the sequence of actions to follow the specified path.
-     */
-    public Command followPath(Path path, boolean preserveEndVelocity, boolean resetOdometry) {
-        PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(path.name());
-
-        if (resetOdometry) {
-            swerve.resetOdometry(pathPlannerPath.getStartingDifferentialPose());
-            return AutoBuilder.followPathWithEvents(pathPlannerPath);
-        }
-
-        return useVisionForPoseEstimation(
-                pathFindTo(pathPlannerPath.getStartingDifferentialPose(), preserveEndVelocity)
-                        .andThen(AutoBuilder.followPathWithEvents(pathPlannerPath))
-        );
+    public Command lockPose() {
+        return drive.runOnce(swerve::lockPose);
     }
 
     /**

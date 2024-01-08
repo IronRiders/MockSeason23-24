@@ -96,6 +96,10 @@ public class RobotContainer {
         );
     }
 
+    public Command getEnableCommand() {
+        return arm.getCommands().reset();
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *

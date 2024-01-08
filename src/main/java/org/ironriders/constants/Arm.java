@@ -44,6 +44,6 @@ public class Arm {
         public static final double D = 0;
 
         public static final TrapezoidProfile.Constraints PROFILE =
-                new TrapezoidProfile.Constraints(60, 30);
+                new TrapezoidProfile.Constraints(70, 50);
     }
 }
