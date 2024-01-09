@@ -7,6 +7,8 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.DriveCommands;
@@ -58,6 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
                         Dimensions.DRIVEBASE_RADIUS,
                         new ReplanningConfig()
                 ),
+                () -> DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red),
                 this
         );
 
