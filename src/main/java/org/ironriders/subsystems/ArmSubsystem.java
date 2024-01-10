@@ -9,10 +9,10 @@ import org.ironriders.commands.ArmCommands;
 import org.ironriders.constants.Ports;
 import org.ironriders.lib.Utils;
 
-import static com.revrobotics.CANSparkBase.IdleMode.kCoast;
-import static com.revrobotics.CANSparkBase.SoftLimitDirection.kForward;
-import static com.revrobotics.CANSparkBase.SoftLimitDirection.kReverse;
-import static com.revrobotics.CANSparkLowLevel.MotorType.kBrushless;
+import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
+import static com.revrobotics.CANSparkMax.SoftLimitDirection.kForward;
+import static com.revrobotics.CANSparkMax.SoftLimitDirection.kReverse;
+import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static org.ironriders.constants.Arm.*;
 import static org.ironriders.constants.Arm.PID.*;
 
