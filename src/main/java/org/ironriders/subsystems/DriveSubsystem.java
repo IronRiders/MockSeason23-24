@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.ironriders.commands.DriveCommands;
 import org.ironriders.constants.Drive;
-import org.ironriders.lib.EnumSendableChooser;
+import org.ironriders.lib.sendable_choosers.EnumSendableChooser;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -70,6 +70,8 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         PathPlannerLogging.setLogActivePathCallback((poses) -> {
+            if (poses.isEmpty()) return;
+
             List<Trajectory.State> states = new ArrayList<>();
             for (Pose2d pose : poses) {
                 Trajectory.State state = new Trajectory.State();

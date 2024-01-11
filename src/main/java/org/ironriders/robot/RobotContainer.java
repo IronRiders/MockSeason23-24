@@ -5,9 +5,6 @@
 
 package org.ironriders.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -18,10 +15,10 @@ import org.ironriders.constants.Ports;
 import org.ironriders.constants.Teleop;
 import org.ironriders.lib.Utils;
 import org.ironriders.subsystems.ArmSubsystem;
+import org.ironriders.subsystems.DashboardSubsystem;
 import org.ironriders.subsystems.DriveSubsystem;
 import org.ironriders.subsystems.ManipulatorSubsystem;
 
-import static org.ironriders.constants.Auto.DEFAULT_AUTO;
 import static org.ironriders.constants.Teleop.Controllers.Joystick;
 import static org.ironriders.constants.Teleop.Speed.DEADBAND;
 import static org.ironriders.constants.Teleop.Speed.MIN_MULTIPLIER;
@@ -36,25 +33,18 @@ public class RobotContainer {
     private final DriveSubsystem drive = new DriveSubsystem();
     private final ManipulatorSubsystem manipulator = new ManipulatorSubsystem();
     private final ArmSubsystem arm = new ArmSubsystem();
+    private final DashboardSubsystem dashboard = new DashboardSubsystem();
     private final CommandXboxController primaryController =
             new CommandXboxController(Ports.Controllers.PRIMARY_CONTROLLER);
     private final CommandJoystick secondaryController =
             new CommandJoystick(Ports.Controllers.SECONDARY_CONTROLLER);
     private final RobotCommands commands = new RobotCommands(arm, drive, manipulator);
     private final DriveCommands driveCommands = drive.getCommands();
-    private final SendableChooser<String> autoOptionSelector = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
-        for (String auto : AutoBuilder.getAllAutoNames()) {
-            if (auto.equals("REGISTERED_COMMANDS")) continue;
-            autoOptionSelector.addOption(auto, auto);
-        }
-        autoOptionSelector.setDefaultOption(DEFAULT_AUTO, DEFAULT_AUTO);
-        SmartDashboard.putData("auto/Auto Option", autoOptionSelector);
-
         configureBindings();
     }
 
@@ -122,6 +112,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return commands.buildAuto(autoOptionSelector.getSelected());
+        return dashboard.getAuto();
     }
 }

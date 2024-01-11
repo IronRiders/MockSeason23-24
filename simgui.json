@@ -80,8 +80,13 @@
       "/SmartDashboard/Pigeon 2 [10]": "Gyro",
       "/SmartDashboard/Pigeon 2 [9]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
+      "/SmartDashboard/arm/Arm PID": "ProfiledPIDController",
+      "/SmartDashboard/auto/A": "String Chooser",
       "/SmartDashboard/auto/Auto Option": "String Chooser",
       "/SmartDashboard/auto/Auto Options": "String Chooser",
+      "/SmartDashboard/auto/B": "String Chooser",
+      "/SmartDashboard/auto/C": "String Chooser",
+      "/SmartDashboard/auto/D": "String Chooser",
       "/SmartDashboard/auto/Pathfinding Constraint Profile": "String Chooser",
       "/SmartDashboard/main/Auto Options": "String Chooser",
       "/SmartDashboard/main/test": "String Chooser",
@@ -118,5 +123,8 @@
         "open": true
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   }
 }

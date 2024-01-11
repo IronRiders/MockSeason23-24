@@ -11,19 +11,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "3,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/auto/Auto Option",
-              "_title": "Auto Option",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "3,1": {
             "size": [
               2,
@@ -48,11 +35,11 @@
               "_title": "Field",
               "_glyph": 148,
               "_showGlyph": false,
-              "Game/Game": "A2018_Power_Up",
+              "Game/Game": "k2018PowerUp",
               "Visuals/Robot Icon Size": 0.1,
               "Visuals/Show Outside Circles": true,
               "Colors/XModules": "#FFFFFFFF",
-              "Colors/Trajectory": "#FF0000FF"
+              "Colors/Trajectory": "#FFFFFFFF"
             }
           },
           "5,0": {
@@ -70,6 +57,58 @@
               "Visuals/Starting angle": 180.0,
               "Visuals/Show tick mark ring": true,
               "Visuals/Counter clockwise": false
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/auto/A",
+              "_title": "SmartDashboard/auto/A",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/auto/B",
+              "_title": "SmartDashboard/auto/B",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/auto/C",
+              "_title": "SmartDashboard/auto/C",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/auto/D",
+              "_title": "SmartDashboard/auto/D",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
