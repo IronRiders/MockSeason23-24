@@ -1,7 +1,11 @@
 package org.ironriders.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,6 +15,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -25,6 +30,12 @@ public class VisionSubsystem extends SubsystemBase {
     private final PhotonPoseEstimator estimator;
     private final AprilTagFieldLayout tagLayout;
     private boolean useVisionForEstimation = false;
+    private final StructArrayPublisher<Pose3d> visibleAprilTags = NetworkTableInstance
+            .getDefault()
+            .getStructArrayTopic("vision/visibleAprilTags", Pose3d.struct)
+            .publish();
+
+    private final UsbCamera cam = CameraServer.startAutomaticCapture();
 
     public VisionSubsystem() {
         try {
@@ -42,6 +53,17 @@ public class VisionSubsystem extends SubsystemBase {
         camera.setDriverMode(false);
 
         SmartDashboard.putString("vision/pipeline", getPipeline().name());
+    }
+
+    @Override
+    public void periodic() {
+        int[] ids = getResult().getTargets().stream().mapToInt(PhotonTrackedTarget::getFiducialId).toArray();
+        Pose3d[] poses = new Pose3d[ids.length];
+        for (int i = 0; i < ids.length; i++) {
+            poses[i] = tagLayout.getTagPose(ids[i]).orElse(new Pose3d());
+        }
+
+        visibleAprilTags.set(poses);
     }
 
     public AprilTagFieldLayout getTagLayout() {
