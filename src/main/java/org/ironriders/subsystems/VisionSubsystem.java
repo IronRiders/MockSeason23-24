@@ -3,6 +3,7 @@ package org.ironriders.subsystems;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
@@ -30,9 +31,14 @@ public class VisionSubsystem extends SubsystemBase {
     private final PhotonPoseEstimator estimator;
     private final AprilTagFieldLayout tagLayout;
     private boolean useVisionForEstimation = false;
-    private final StructArrayPublisher<Pose3d> visibleAprilTags = NetworkTableInstance
+    private final StructArrayPublisher<Pose3d> visibleAprilTags3D = NetworkTableInstance
             .getDefault()
             .getStructArrayTopic("vision/visibleAprilTags", Pose3d.struct)
+            .publish();
+
+    private final StructArrayPublisher<Pose2d> visibleAprilTags2D = NetworkTableInstance
+            .getDefault()
+            .getStructArrayTopic("vision/visibleAprilTags", Pose2d.struct)
             .publish();
 
     private final UsbCamera cam = CameraServer.startAutomaticCapture();
@@ -58,12 +64,15 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         int[] ids = getResult().getTargets().stream().mapToInt(PhotonTrackedTarget::getFiducialId).toArray();
-        Pose3d[] poses = new Pose3d[ids.length];
+        Pose3d[] poses3D = new Pose3d[ids.length];
+        Pose2d[] poses2D = new Pose2d[ids.length];
         for (int i = 0; i < ids.length; i++) {
-            poses[i] = tagLayout.getTagPose(ids[i]).orElse(new Pose3d());
+            poses3D[i] = tagLayout.getTagPose(ids[i]).orElse(new Pose3d());
+            poses2D[i] = poses3D[i].toPose2d();
         }
 
-        visibleAprilTags.set(poses);
+        visibleAprilTags3D.set(poses3D);
+        visibleAprilTags2D.set(poses2D);
     }
 
     public AprilTagFieldLayout getTagLayout() {

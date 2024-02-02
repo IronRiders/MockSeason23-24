@@ -74,9 +74,9 @@ public class RobotContainer {
         // Primary Driver
         drive.setDefaultCommand(
                 driveCommands.teleopCommand(
-                        () -> -controlCurve(primaryController.getLeftY()),
-                        () -> -controlCurve(primaryController.getLeftX()),
-                        () -> -controlCurve(primaryController.getRightX())
+                        () -> controlCurve(primaryController.getLeftY()),
+                        () -> controlCurve(primaryController.getLeftX()),
+                        () -> controlCurve(primaryController.getRightX())
                 )
         );
 
